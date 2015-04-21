@@ -116,13 +116,16 @@
 	</body>
 	<script src="js/jQuery/jquery-1.11.2.min.js"></script>
 	<script src="js/fastclick/fastclick.js"></script>
+    <script src="js/function.js"></script>
+    <script src="js/user.js"></script>
+    <script src='js/base64.js' id="base64"></script>
 	<script>
 		$(function() {
 			FastClick && FastClick.attach(document.body); //调用fastClick加快手机端的click事件时间
 			if (window.localStorage['user-id']) {
-				$('#txtIphone').val(window.localStorage['user-id']);
+				$('#txtIphone').val(window.localStorage['user-name']);
 				$('#txtPassword').val(window.localStorage['password']);
-				checkLogin();
+//				checkLogin();
 				return;
 			}
 			var $btnLogin = $('#btnLogin');
@@ -148,11 +151,12 @@
 		function checkLogin() {
 			var iphone = $('#txtIphone').val(),
 				pw = $('#txtPassword').val();
-			if (iphone && iphone == '18600646863' && pw && pw == 123456) {
-				window.localStorage['user-id'] = iphone;
-				window.localStorage['password'] = pw;
-				window.location.href = 'index.html';
-			}
+            userModule.login(iphone, pw);
+//			if (iphone && iphone == '18600646863' && pw && pw == 123456) {
+//				window.localStorage['user-id'] = iphone;
+//				window.localStorage['password'] = pw;
+//				window.location.href = 'index.html';
+//			}
 		}
 	</script>
 

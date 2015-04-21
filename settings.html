@@ -216,6 +216,7 @@
 	<script src="js/global.js"></script>
 	<script>
 		$(function() {
+            $(".glyphicon-user").next().text(window.localStorage['user-name']);
 			$('.user-info').on('click', function(e) {
 				APP.alert('程序开发中','友情提示');
 			});
