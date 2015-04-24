@@ -44,12 +44,14 @@ var userModule = (function() {
             }
         },
         //获取所有借入，借出列表
-        getList: function() {
-            var a = null;
-            globalModule.jsonp('user', 'getAll', {'user_id':window.localStorage['user-id']}, function(res){
-                a = res;
+        createRecord: function() {
+            var controller = ($("#selType").val() == "borrow") ? "incount" : "outcount";
+            var postData = globalModule.getJsonDataFromSeriaArr($("#account-form").serializeArray());
+            postData["Account[user_id]"] = window.localStorage['user-id'];
+
+            globalModule.jsonp(controller, 'create', postData, function(res){
+                window.location.href = 'record.html';
             });
-            console.log(a);
         }
     }
 

@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="misapplication-tap-highlight" content="no" />
+		<meta name="HandheldFriendly" content="true" />
+		<meta name="MobileOptimized" content="320" />
+		<title>记账</title>
+		<link rel="stylesheet" href="css/default.min.css" />
+		<link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="css/global.css" />
+        <script src="js/function.js"></script>
+        <script src="js/user.js"></script>
+        <script src='js/base64.js' id="base64"></script>
+		<style>
+			.container-fluid {
+				margin: 0px;
+				padding: 0px;
+				overflow: auto;
+				width: 100%;
+			}
+			.search-form {
+				width: 100%;
+				border-bottom: 1px solid rgba(127, 127, 127, .5);
+				padding: 4px 5px 3px 5px;
+			}
+			.search-form input {
+				width: 100%;
+				line-height: 28px;
+				height: 28px;
+				font-size: 12px;
+			}
+			.user-info {
+				margin-top: 8px;
+				width: 100%;
+				height: 56px;
+				border-bottom: 1px solid rgba(127, 127, 127, .4);
+				padding-left: 3px;
+				padding-right: 15px;
+			}
+			.user-poto {
+				width: 20%;
+				float: left;
+				text-align: center;
+			}
+			.user-poto img {
+				width: 48px;
+				height: 48px;
+				border: 1px solid rgba(127, 127, 127, .5);
+				border-radius: 50%;
+			}
+			.user-detail {
+				width: 40%;
+				float: left;
+				padding-left: 0%;
+			}
+			.glyphicon-earphone + em {
+				color: blue;
+			}
+			.user-bill {
+				width: 35%;
+				float: left;
+				padding-left: 0%;
+				border-left: 1px solid rgba(127, 127, 127, .1);
+				padding-left: 5px;
+			}
+			.user-bill .bill-total {
+				display: inline-block;
+				width: 100%;
+				height: 28px;
+				line-height: 32px;
+				font-weight: bold;
+				font-size: 20px;
+				text-align: center;
+				margin-top: -5px;
+				margin-bottom: 5px;
+			}
+			.user-bill .bill-total sub {
+				font-size: 10px;
+				margin-right: 5px;
+				font-weight: normal;
+			}
+			.user-bill .bill-item {
+				display: inline-block;
+				width: 100%;
+				height: 40%;
+				font-size: 10px;
+				text-align: center;
+			}
+			.user-bill .bill-item em {
+				float: left;
+				width: 50%;
+				display: inline-block;
+				font-weight: normal;
+			}
+			.user-bill .bill-item sub {
+				font-size: 10px;
+			}
+			.user-detail span {
+				display: inline-block;
+				width: 100%;
+				margin: 0px;
+				padding: 0px;
+				height: 22px;
+			}
+			.user-detail i {
+				width: 22px;
+				display: inline-block;
+				text-align: right;
+				float: left;
+				margin: 0px;
+				padding: 0px;
+				line-height: 100%;
+				padding-right: 6px;
+			}
+			.user-detail em {
+				display: inline-block;
+				text-align: left;
+				text-indent: 0.3em;
+				float: left;
+				margin: 0px;
+				padding: 0px;
+				line-height: 100%;
+			}
+			.menu-right {
+				width: 5%;
+				float: left;
+				line-height: 56px;
+				text-align: right;
+			}
+			.up {
+				color: rgba(255, 0, 0, 1);
+			}
+			.down {
+				color: rgba(0, 255, 0, 1);
+			}
+			ul{
+				margin: 0px;
+				padding: 0px;
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="k-nav">
+			<span class="left" style="visibility: hidden;"><a href="#"><i class="glyphicon glyphicon-menu-left"></i>返回</a></span>
+			<span class="text">小计一笔</span>
+		</div>
+        <form id="account-form">
+            <input class="txt-iphone" name="Account[user_id]" value="" type="hidden" />
+            <div class="input-group text-center">
+                <div class="input noborder">
+                    <span>金额￥</span>
+                    <input class="txt-iphone" name="Account[money]" placeholder="金额" />
+                </div>
+            </div>
+            <div class="input-group text-center">
+                <div class="input noborder">
+                    <span>借贷方式</span>
+                    <!-- Single button -->
+                    <div class="btn-group">
+                        <select id="selType" name="type">
+                            <option value="borrow" selected="selected">借入</option>
+                            <option value="lend">借出</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="input-group text-center">
+                <div class="input noborder">
+                    <span>联系人</span>
+                    <input class="txt-password"  name="Account[customer_id]" placeholder="联系人" />
+                </div>
+            </div>
+            <div class="input-group text-center">
+                <div class="input noborder">
+                    <span>还款日期</span>
+                    <input class="txt-password" name="Account[confer_repayment_date]" placeholder="还款日期" />
+                </div>
+            </div>
+            <div class="input-group text-center">
+                <div class="input noborder">
+                    <span>备注</span>
+                    <textarea name="Account[note]" placeholder="备注" ></textarea>
+                </div>
+            </div>
+            <button type="button" class="btn btn-info btn-block btn-opacity btn-lg" id="btnNext">保存</button>
+        </form>
+
+	</body>
+
+	<script src="js/jQuery/jquery-1.11.2.min.js"></script>
+	<script src="js/fastclick/fastclick.js"></script>
+	<script src="js/appDefined.js"></script>
+	<script src="js/lib/k-utils-fn.js"></script>
+	<script src="js/lib/k-utils-plug.js"></script>
+	<script src="js/global.js"></script>
+	<script>
+		$(function() {
+			$('.container-fluid').css({
+				'height': window.screen.height - 96 + 'px'
+			});
+            $("#btnNext").click(function(){
+                userModule.createRecord();
+            });
+		});
+	</script>
+</html>
