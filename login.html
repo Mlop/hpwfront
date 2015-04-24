@@ -10,7 +10,7 @@
 		<meta http-equiv="Cache-Control" content="no-store,no-cache">
 		<meta name="Handheldfriendly" content="true">
 		<meta name="robots" content="all">
-		<title>哗!收账</title>
+		<title>登陆</title>
 		<link rel="stylesheet" href="css/default.min.css" />
 		<link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css" />
 		<style>
@@ -122,12 +122,13 @@
 	<script>
 		$(function() {
 			FastClick && FastClick.attach(document.body); //调用fastClick加快手机端的click事件时间
-			if (window.localStorage['user-id']) {
-				$('#txtIphone').val(window.localStorage['user-name']);
-				$('#txtPassword').val(window.localStorage['password']);
+			/*if (window.localStorage['user-id']) {
+                window.location.href = 'index.html';
+//				$('#txtIphone').val(window.localStorage['user-name']);
+//				$('#txtPassword').val(window.localStorage['password']);
 //				checkLogin();
 				return;
-			}
+			}*/
 			var $btnLogin = $('#btnLogin');
 			$('#txtIphone').focus(); //初始化的时候将焦点定位到手机号输入界面
 			//验证手机号码已经输入、密码已经输入就将按钮能点击

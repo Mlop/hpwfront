@@ -20,16 +20,37 @@ var userModule = (function() {
             globalModule.jsonp('user', 'login', {'User[phone]':phone, 'User[password]':pwd}, userModule.afterLogin);
         },
         afterLogin: function(result) {
-            if (result.error == 0) {
-                var user = result.msg;
-                window.localStorage['user-id'] = user.user_id;
-                window.localStorage['user-name'] = user.name;
-                window.localStorage['phone'] = user.phone;
-                window.location.href = 'index.html';
-            } else {
-
+            switch(result.error) {
+                case 0:
+                    var user = result.msg;
+                    window.localStorage['user-id'] = user.user_id;
+                    window.localStorage['user-name'] = user.name;
+                    window.localStorage['phone'] = user.phone;
+                    window.location.href = 'index.html';
+                    break;
+                case 1:
+                    var error = "";
+                    for(var field in result.msg) {
+                        var errorMsg = result.msg[field];
+                        for(var i=0; i < errorMsg.length; i++) {
+                            error += errorMsg[i];
+                        }
+                        alert(field + "  " + error);
+                    }
+                    break;
+                case 2:
+                    alert(result.msg);
+                    break;
             }
         },
+        //获取所有借入，借出列表
+        getList: function() {
+            var a = null;
+            globalModule.jsonp('user', 'getAll', {'user_id':window.localStorage['user-id']}, function(res){
+                a = res;
+            });
+            console.log(a);
+        }
     }
 
 	return userModule;

@@ -73,17 +73,26 @@
         <form id="register-form">
             <div class="input-group text-center">
                 <div class="input noborder">
-                    <input class="txt-iphone" type="tel" id="txtName" name="User[name]" placeholder="姓名" />
-                </div>
-                <div class="input noborder">
                     <span>+86</span>
                     <input class="txt-iphone" type="tel" id="txtIphone" name="User[phone]" placeholder="手机号" />
                 </div>
+            </div>
+            <div class="input-group text-center">
                 <div class="input noborder">
-                    <input class="txt-iphone" type="password" id="txtPassword" name="User[password]" placeholder="密码" />
+                    <span>姓名</span>
+                    <input class="txt-name" type="tel" id="txtName" name="User[name]" placeholder="姓名" />
                 </div>
+            </div>
+            <div class="input-group text-center">
                 <div class="input noborder">
-                    <input class="txt-iphone" type="password" id="txtPasswordRetry" name="User[newpassword]" placeholder="再次输入密码" />
+                    <span>密码</span>
+                    <input class="txt-password type="password" id="txtPassword" name="User[password]" placeholder="密码" />
+                </div>
+            </div>
+            <div class="input-group text-center">
+                <div class="input noborder">
+                    <span>再次输入密码</span>
+                    <input class="txt-password" type="password" id="txtPasswordRetry" name="User[newpassword]" placeholder="再次输入密码" />
                 </div>
             </div>
             <button type="submit" class="btn btn-info btn-block btn-opacity btn-lg" id="btnNext" disabled="disabled">下一步</button>
