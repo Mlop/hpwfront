@@ -9,7 +9,7 @@
 		<meta name="misapplication-tap-highlight" content="no" />
 		<meta name="HandheldFriendly" content="true" />
 		<meta name="MobileOptimized" content="320" />
-		<title>哗!收账</title>
+		<title>借出列表</title>
 		<link rel="stylesheet" href="css/default.min.css" />
 		<link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="css/global.css" />
@@ -148,7 +148,7 @@
 	<body>
 		<div class="k-nav">
 			<span class="left" style="visibility: hidden;"><a href="#"><i class="glyphicon glyphicon-menu-left"></i>返回</a></span>
-			<span class="text">哗!收账</span>
+			<span class="text">所有借出列表</span>
 		</div>
 		<div class="container-fluid">
 			<div class="search-form">
@@ -171,10 +171,7 @@
 				</li>
 			</ul>
 		</div>
-	</body><!--<span class="bill-item">
-					<em class="up"><sub class="glyphicon glyphicon-arrow-up"></sub>{ way }</em>
-					<em class="down"><sub class="glyphicon glyphicon-arrow-down"></sub>{ way }</em>
-				</span>-->
+	</body>
     <!-- 定义用户列表模板-->
     <script id="tpl" type="text/plain">
 		<div class="user-info">
@@ -182,9 +179,9 @@
 			<span class="user-detail"><span><i class="glyphicon glyphicon-user"></i><em>{ username }</em></span>
 			<span><i class="glyphicon glyphicon-earphone"></i><em>{ phone }</em></span></span>
 			<span class="user-bill">
-				<span class="bill-total {red}"><img src="img/wallet.png" /><sub class="glyphicon glyphicon-arrow-{direction} {direction}"></sub><em><sub class="glyphicon glyphicon-yen"></sub>{ money }</em></span>
+				<span class="bill-total {red}"><img src="img/wallet.png" /><sub class="glyphicon glyphicon-arrow-{direction} {direction}"></sub><em><sub class="glyphicon glyphicon-yen"></sub>{ totalmoney }</em></span>
                 <span class="bill-item">
-					<em class="{red}">{ leftday }</em>
+					<em class="{red}">left { leftday } days</em>
                 </span>
 			</span>
 			<span class="menu-right"><i class="glyphicon glyphicon-menu-right"></i></span>
@@ -202,7 +199,7 @@
 			$('.container-fluid').css({
 				'height': window.screen.height - 96 + 'px'
 			});
-            globalModule.jsonp('user', 'getAll', {'user_id':window.localStorage['user-id']}, function(result){
+            globalModule.jsonp('user', 'getListByPerson', {'user_id':window.localStorage['user-id'], 'type':'lend'}, function(result){
                 var data = result['msg'],
                         tpl = new Template($('#tpl').html()),
                         htmls = [];
@@ -225,14 +222,6 @@
                 }
                 $('.list-form ul').empty().html(htmls.join(''));
             });
-			/*var data = getUserList(),
-				tpl = new Template($('#tpl').html()),
-				htmls = [];
-			for (var i = 0, l = data.length; i < l; i++) {
-				htmls.push('<li>' + tpl.render(data[i]) + '</li>');
-			}
-			$('.list-form ul').empty().html(htmls.join(''));
-			*/
 			$('.glyphicon-earphone ~ em').on('click',function(e){
 				var tar = $(e.target),phone=tar.html();
 				APP.showActionSheet(phone);

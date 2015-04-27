@@ -89,7 +89,7 @@
 	<body>
 		<div class="k-nav">
 			<span class="left" style="visibility: hidden;"><a href="#"><i class="glyphicon glyphicon-menu-left"></i>返回</a></span>
-			<span class="text">哗!收账</span>
+			<span class="text" id="loginUser">哗!收账</span>
 		</div>
 		<div class="container-fluid">
 			<div class="container-empty"></div>
@@ -98,21 +98,20 @@
 				<div class="container-footer-con">
 					<span class="title">出(本月)</span>
 					<span class="context">
-						<em>4000</em>
+						<em id="curOut">4000</em>
 						<sub><i class="glyphicon glyphicon-arrow-up">1000</i></sub>
-						
 					</span>
-					<span class="bottom">
-						<em>总计：</em><em>10000</em>
+					<span class="bottom" onclick="window.location.href='lendlist.html'">
+						<em>总计：</em><em id="outTotal">10000</em>
 					</span>
 				</div>
 				<div class="container-footer-con container-split"></div>
 				<div class="container-footer-con"><span class="title">入(本月)</span>
 					<span class="context">
-						<em>4000</em>
+						<em id="curIn">4000</em>
 						<sub><i class="glyphicon glyphicon-arrow-down">1000</i></sub>
 					</span>
-					<span class="bottom"><em>总计：</em><em>10000</em></span>
+					<span class="bottom"><em>总计：</em><em id="inTotal">10000</em></span>
 				</div>
 			</div>
 		</div>
@@ -134,8 +133,24 @@
 	<script src="js/fastclick/fastclick.js"></script>
 	<script src="js/appDefined.js"></script>
 	<script src="js/global.js"></script>
+    <script src="js/function.js"></script>
+    <script src="js/user.js"></script>
+    <script src='js/base64.js' id="base64"></script>
 	<script>
 		$(function() {
+            if (window.localStorage['user-id']) {
+                $("#loginUser").text(window.localStorage['user-name']);
+            } else {
+                window.location.href="login.html";
+            }
+            globalModule.jsonp('user', 'getTotalPeriod', {'user_id':window.localStorage['user-id'], 'period_type':'month'}, function(res){
+                if (res.error == 0) {
+                    $("#curOut").text(res.msg.currentOutTotal);
+                    $("#outTotal").text(res.msg.outTotal);
+                    $("#curIn").text(res.msg.currentInTotal);
+                    $("#inTotal").text(res.msg.inTotal);
+                }
+            });
 			APP.setStatusBarBackground('#038eef');
 		});
 	</script>
