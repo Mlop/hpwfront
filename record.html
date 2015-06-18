@@ -147,50 +147,48 @@
 
 	<body>
 		<div class="k-nav">
-			<span class="left" style="visibility: hidden;"><a href="#"><i class="glyphicon glyphicon-menu-left"></i>返回</a></span>
+			<span class="left"><a href="/index.html"><i class="glyphicon glyphicon-menu-left"></i>返回</a></span>
 			<span class="text">小计一笔</span>
 		</div>
-        <form id="account-form">
+        <div class="alert alert-danger" style="display: none;" id="divError">错误！请进行一些更改。</div>
+        <form class="form-horizontal" id="account-form">
             <input class="txt-iphone" name="Account[user_id]" value="" type="hidden" />
-            <div class="input-group text-center">
-                <div class="input noborder">
-                    <span>金额￥</span>
-                    <input class="txt-iphone" name="Account[money]" placeholder="金额" />
+            <div class="form-group">
+                <label class="col-sm-2 control-label">金额￥</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="Account[money]" placeholder="金额">
                 </div>
             </div>
-            <div class="input-group text-center">
-                <div class="input noborder">
-                    <span>借贷方式</span>
-                    <!-- Single button -->
-                    <div class="btn-group">
-                        <select id="selType" name="type">
-                            <option value="borrow" selected="selected">借入</option>
-                            <option value="lend">借出</option>
-                        </select>
-                    </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">借贷方式</label>
+                <div class="col-sm-8">
+                    <select id="selType" class="form-control" name="type">
+                        <option value="borrow" selected="selected">借入</option>
+                        <option value="lend">借出</option>
+                    </select>
                 </div>
             </div>
-            <div class="input-group text-center">
-                <div class="input noborder">
-                    <span>联系人</span>
-                    <input class="txt-password"  name="Account[customer_id]" placeholder="联系人" />
+            <div class="form-group">
+                <label class="col-sm-2 control-label">联系人</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="Account[customer_id]" placeholder="联系人">
                 </div>
             </div>
-            <div class="input-group text-center">
-                <div class="input noborder">
-                    <span>还款日期</span>
-                    <input class="txt-password" name="Account[confer_repayment_date]" placeholder="还款日期" />
+            <div class="form-group">
+                <label class="col-sm-2 control-label">还款日期</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="Account[confer_repayment_date]" placeholder="还款日期">
                 </div>
             </div>
-            <div class="input-group text-center">
-                <div class="input noborder">
-                    <span>备注</span>
-                    <textarea name="Account[note]" placeholder="备注" ></textarea>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">备注</label>
+                <div class="col-sm-8">
+                    <textarea class="form-control" placeholder="备注" name="Account[note]"></textarea>
                 </div>
             </div>
+
             <button type="button" class="btn btn-info btn-block btn-opacity btn-lg" id="btnNext">保存</button>
         </form>
-
 	</body>
 
 	<script src="js/jQuery/jquery-1.11.2.min.js"></script>
@@ -201,6 +199,9 @@
 	<script src="js/global.js"></script>
 	<script>
 		$(function() {
+            if (!userModule.isLogin()) {
+                window.location.href = "/login.html";
+            }
 			$('.container-fluid').css({
 				'height': window.screen.height - 96 + 'px'
 			});

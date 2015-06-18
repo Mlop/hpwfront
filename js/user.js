@@ -43,15 +43,39 @@ var userModule = (function() {
                     break;
             }
         },
+        isLogin: function() {
+            if (window.localStorage['user-id']) {
+                return true;
+            }
+            return false;
+        },
         //获取所有借入，借出列表
         createRecord: function() {
             var controller = ($("#selType").val() == "borrow") ? "incount" : "outcount";
             var postData = globalModule.getJsonDataFromSeriaArr($("#account-form").serializeArray());
             postData["Account[user_id]"] = window.localStorage['user-id'];
 
-            globalModule.jsonp(controller, 'create', postData, function(res){
-                window.location.href = 'record.html';
-            });
+            globalModule.jsonp(controller, 'create', postData,
+                function(result){
+                    switch(result.error) {
+                        case 0:
+                            window.location.href = 'record.html';
+                            break;
+                        case 1:
+                            var errorHtml = "";
+                            for(var field in result.msg) {
+                                var errorMsg = result.msg[field];
+                                var error = "";
+                                for(var i=0; i < errorMsg.length; i++) {
+                                    error += errorMsg[i];
+                                }
+                                errorHtml += error;
+                            }
+                            $("#divError").html(errorHtml).show();
+                            break;
+                    }
+                }
+            );
         }
     }
 
