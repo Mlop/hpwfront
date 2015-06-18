@@ -56,10 +56,10 @@
 			//var phonePreTelecom=[133,153,180,181,189,177];
 			//var phonePreChinaUnicom=[130,131,132,155,156,185,186,176,185];
 			//var phonePreMobile=[134,135,136,137,138,139,150,151,152,158,159,182,183,184,157,187,188,147,178];
-			/*var phonePre = [133, 153, 180, 181, 189, 177, 130, 131, 132, 155, 156, 185, 186, 176, 185, 134, 135, 136, 137, 138, 139, 150, 151, 152, 158, 159, 182, 183, 184, 157, 187, 188, 147, 178];
+			var phonePre = [133, 153, 180, 181, 189, 177, 130, 131, 132, 155, 156, 185, 186, 176, 185, 134, 135, 136, 137, 138, 139, 150, 151, 152, 158, 159, 182, 183, 184, 157, 187, 188, 147, 178];
 			var phone = phonePre[this.getRandomByM(0, phonePre.length)] + '' + this.getRandomByM(10000000, 99999999, 8);
-			*/
-			var phone='18600646863';
+			
+			//var phone = '18600646863';
 			var count = 0;
 			return format ? format.replace(/#/g, function() {
 				return phone[count++];
@@ -83,6 +83,26 @@
 				t.push(this.un_name[this.getRandomByM(0, this.un_name.length)]);
 			}
 			return t.join('');
+		},
+		/**
+		 * 根据样式获取父元素
+		 * @param {Object} par 父元素
+		 * @param {Object} filter 样式名称
+		 */
+		getTarparanetByClass: function(par, filter) {
+			return par.hasClass(filter) ? par : this.getTarparanetByClass(par.parent(), filter);
+		},
+		/**
+		 * 获取元素父元素
+		 *
+		 * @param {Object}
+		 *            par 元素,$对象
+		 * @param {Object}
+		 *            filter 过滤条件
+		 */
+
+		getTarparanet: function(par, filter) {
+			return (par[0][filter['key']] == filter['value'] || par[0][filter['key']] == 'BODY') ? par : this.getTarparanet(par.parent(), filter);
 		}
 	};
 

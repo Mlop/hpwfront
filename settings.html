@@ -189,14 +189,6 @@
 						    </div>
 						</span>
 					</li>
-                    <!--<li><span class="text-left">列表数据小于该天数显示红色</span>
-						<span class="text-right">
-							<div class="slide on">
-                                <input type="input" value="10" name="" />Days
-                                <label for="slideTow"></label>
-                            </div>
-						</span>
-                    </li>-->
 					<li>
 						<span class="text-left"><a href="help/index.html">HBuilder帮助文档</a></span>
 						<span class="text-right">
@@ -221,10 +213,10 @@
 	<script src="js/jQuery/jquery-1.11.2.min.js"></script>
 	<script src="js/fastclick/fastclick.js"></script>
 	<script src="js/appDefined.js"></script>
+	<script src="js/lib/k-utils-fn.js"></script>
 	<script src="js/global.js"></script>
 	<script>
 		$(function() {
-            $(".glyphicon-user").next().text(window.localStorage['user-name']);
 			$('.user-info').on('click', function(e) {
 				APP.alert('程序开发中','友情提示');
 			});

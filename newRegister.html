@@ -10,7 +10,7 @@
 		<meta http-equiv="Cache-Control" content="no-store,no-cache">
 		<meta name="Handheldfriendly" content="true">
 		<meta name="robots" content="all">
-		<title>新用户注册</title>
+		<title>哗!收账</title>
 		<link rel="stylesheet" href="css/default.min.css" />
 		<link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css" />
 		<style>
@@ -70,39 +70,16 @@
 			<span class="left"><a href="login.html"><i class="glyphicon glyphicon-menu-left"></i>返回</a></span>
 			<span class="text">新用户注册</span>
 		</div>
-        <form id="register-form">
-            <div class="input-group text-center">
-                <div class="input noborder">
-                    <span>+86</span>
-                    <input class="txt-iphone" type="tel" id="txtIphone" name="User[phone]" placeholder="手机号" />
-                </div>
-            </div>
-            <div class="input-group text-center">
-                <div class="input noborder">
-                    <span>姓名</span>
-                    <input class="txt-name" type="tel" id="txtName" name="User[name]" placeholder="姓名" />
-                </div>
-            </div>
-            <div class="input-group text-center">
-                <div class="input noborder">
-                    <span>密码</span>
-                    <input class="txt-password" type="password" id="txtPassword" name="User[password]" placeholder="密码" />
-                </div>
-            </div>
-            <div class="input-group text-center">
-                <div class="input noborder">
-                    <span>再次输入密码</span>
-                    <input class="txt-password" type="password" id="txtPasswordRetry" name="User[newpassword]" placeholder="再次输入密码" />
-                </div>
-            </div>
-            <button type="submit" class="btn btn-info btn-block btn-opacity btn-lg" id="btnNext" disabled="disabled">下一步</button>
-        </form>
+		<div class="input-group text-center">
+			<div class="input noborder">
+				<span>+86</span>
+				<input class="txt-iphone" type="tel" id="txtIphone" placeholder="手机号" />
+			</div>
+		</div>
+		<button type="button" class="btn btn-info btn-block btn-opacity btn-lg" id="btnNext" disabled="disabled">下一步</button>
 	</body>
 	<script src="js/jQuery/jquery-1.11.2.min.js"></script>
 	<script src="js/fastclick/fastclick.js"></script>
-    <script src="js/function.js"></script>
-    <script src="js/user.js"></script>
-    <script src='js/base64.js'></script>
 	<script>
 		$(function() {
 			var $btnNext=$('#btnNext');
@@ -112,7 +89,6 @@
 					$btnNext.removeClass('btn-info btn-opacity').addClass('btn-primary');
 				}
 			});
-            userModule.register();
 		});
 	</script>
 

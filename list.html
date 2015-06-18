@@ -13,9 +13,6 @@
 		<link rel="stylesheet" href="css/default.min.css" />
 		<link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="css/global.css" />
-        <script src="js/function.js"></script>
-        <script src="js/user.js"></script>
-        <script src='js/base64.js' id="base64"></script>
 		<style>
 			.container-fluid {
 				margin: 0px;
@@ -138,7 +135,7 @@
 			.down {
 				color: rgba(0, 255, 0, 1);
 			}
-			ul{
+			ul {
 				margin: 0px;
 				padding: 0px;
 			}
@@ -161,31 +158,29 @@
 		</div>
 		<div class="footer">
 			<ul>
-				<li><a href="javascript:void(0);" data-target="index.html" class="glyphicon glyphicon-home"><i>主页</i></a>
+				<li><a href="#" data-target="index.html" class="glyphicon glyphicon-home"><i>主页</i></a>
 				</li>
-				<li class="selected"><a href="javascript:void(0);" data-target="list.html" class="glyphicon glyphicon-list"><i>列表</i></a>
+				<li class="selected"><a href="#" data-target="list.html" class="glyphicon glyphicon-list"><i>列表</i></a>
 				</li>
-				<li><a href="javascript:void(0);" data-target="calendar.html" class="glyphicon glyphicon-calendar"><i>日历</i></a>
+				<li><a href="#" data-target="calendar.html" class="glyphicon glyphicon-calendar"><i>日历</i></a>
 				</li>
-				<li><a href="javascript:void(0);" data-target="settings.html" class="glyphicon glyphicon-cog"><i>设置</i></a>
+				<li><a href="#" data-target="settings.html" class="glyphicon glyphicon-cog"><i>设置</i></a>
 				</li>
 			</ul>
 		</div>
-	</body><!--<span class="bill-item">
-					<em class="up"><sub class="glyphicon glyphicon-arrow-up"></sub>{ way }</em>
-					<em class="down"><sub class="glyphicon glyphicon-arrow-down"></sub>{ way }</em>
-				</span>-->
-    <!-- 定义用户列表模板-->
-    <script id="tpl" type="text/plain">
+	</body>
+	<!-- 定义用户列表模板-->
+	<script id="tpl" type="text/plain">
 		<div class="user-info">
 			<span class="user-poto"><img src="{ url }" /></span>
-			<span class="user-detail"><span><i class="glyphicon glyphicon-user"></i><em>{ username }</em></span>
-			<span><i class="glyphicon glyphicon-earphone"></i><em>{ phone }</em></span></span>
+			<span class="user-detail"><span><!--<i class="glyphicon glyphicon-user"></i>--><em>{ username }</em></span>
+			<span><!--<i class="glyphicon glyphicon-earphone"></i>--><em>{ iphone }</em></span></span>
 			<span class="user-bill">
-				<span class="bill-total {red}"><img src="img/wallet.png" /><sub class="glyphicon glyphicon-arrow-{direction} {direction}"></sub><em><sub class="glyphicon glyphicon-yen"></sub>{ money }</em></span>
-                <span class="bill-item">
-					<em class="{red}">{ leftday }</em>
-                </span>
+				<span class="bill-total"><em><!--<sub class="glyphicon glyphicon-yen"></sub>-->{ bill.total }</em></span>
+			<span class="bill-item">
+					<em class="up"><!--<sub class="glyphicon glyphicon-arrow-up"></sub>-->{ bill.owe }</em>
+					<em class="down"><!--<sub class="glyphicon glyphicon-arrow-down"></sub>-->{ bill.income }</em>
+				</span>
 			</span>
 			<span class="menu-right"><i class="glyphicon glyphicon-menu-right"></i></span>
 		</div>
@@ -196,71 +191,31 @@
 	<script src="js/appDefined.js"></script>
 	<script src="js/lib/k-utils-fn.js"></script>
 	<script src="js/lib/k-utils-plug.js"></script>
+	<script src="js/APPDataInterface.js"></script>
 	<script src="js/global.js"></script>
 	<script>
 		$(function() {
 			$('.container-fluid').css({
 				'height': window.screen.height - 96 + 'px'
 			});
-            globalModule.jsonp('user', 'getAll', {'user_id':window.localStorage['user-id']}, function(result){
-                var data = result['msg'],
-                        tpl = new Template($('#tpl').html()),
-                        htmls = [];
-                var headimgs = ['fbb.jpg', 'fsf.jpg', 'gy.jpg', 'hxm.jpg', 'jy.jpg', 'lyx.jpg', 'sc.jpg'];
-                for (var i = 0, l = data.length; i < l; i++) {
-                    var item = data[i];
-                    item['url'] = 'img/headimg/' + headimgs[K.getRandomByM(0, 6)];
-                    item['direction'] = (data[i]['way'] == 'borrow') ? "left" : "right";
-                    item['red'] = '';
-                    if (item['leftday'] != 'unlimit') {
-                        var leftday = parseInt(item['leftday']);
-                        if (leftday <= 0 || (leftday > 0 && leftday <= 10)) {
-                            item['red'] = 'up';
-                        }
-                        if (item['is_repayment'] == "yes") {
-                            item['leftday'] = "";
-                        }
-                    }
-                    htmls.push('<li>' + tpl.render(item) + '</li>');
-                }
-                $('.list-form ul').empty().html(htmls.join(''));
-            });
-			/*var data = getUserList(),
-				tpl = new Template($('#tpl').html()),
-				htmls = [];
-			for (var i = 0, l = data.length; i < l; i++) {
-				htmls.push('<li>' + tpl.render(data[i]) + '</li>');
-			}
-			$('.list-form ul').empty().html(htmls.join(''));
-			*/
-			$('.glyphicon-earphone ~ em').on('click',function(e){
-				var tar = $(e.target),phone=tar.html();
+			getDataInterFace({
+				code: 2,
+				type: 1
+			}, function(rData) {
+				rData = $.parseJSON(rData);
+				var tpl = new Template($('#tpl').html()),
+					htmls = [];
+				for (var i = 0, l = rData.length; i < l; i++) {
+					htmls.push('<li>' + tpl.render(rData[i]) + '</li>');
+				}
+				$('.list-form ul').empty().html(htmls.join(''));
+			});
+			$('.glyphicon-earphone ~ em').on('click', function(e) {
+				var tar = $(e.target),
+					phone = tar.html();
 				APP.showActionSheet(phone);
 			});
 		});
-
-		function getUserList() {
-			var r = [],
-				k = window.K,
-				owe = 0,
-				income = 0;
-			var headimgs = ['fbb.jpg', 'fsf.jpg', 'gy.jpg', 'hxm.jpg', 'jy.jpg', 'lyx.jpg', 'sc.jpg'];
-			for (var i = 0, l = 50; i < l; i++) {
-				owe = K.getRandom(0, 50000);
-				income = K.getRandom(0, 50000);
-				r.push({
-					url: 'img/headimg/' + headimgs[K.getRandomByM(0, 6)],
-					username: K.getUserName(),
-					iphone: K.getRandomPhone('###-####-####'),
-					bill: {
-						total: owe + income,
-						owe: owe,
-						income: income
-					}
-				});
-			}
-			return r;
-		}
 	</script>
 
 </html>
