@@ -9,7 +9,7 @@
 		<meta name="misapplication-tap-highlight" content="no" />
 		<meta name="HandheldFriendly" content="true" />
 		<meta name="MobileOptimized" content="320" />
-		<title>哗!收账</title>
+		<title>地图</title>
 		<link rel="stylesheet" href="css/default.min.css" />
 		<link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="css/global.css" />
@@ -50,40 +50,27 @@
 			<span class="text">哗!收账</span>
 		</div>
 		<div class="container-fluid">
-			<div class="container-fluid-item">
-				<ul class="item">
-					<li class="selected"><a href="#" class="glyphicon glyphicon-export"><i>借出</i></a>
-					</li>
-					<li><a href="#" class="glyphicon glyphicon-import"><i>借入</i></a>
-					</li>
-				</ul>
-			</div>
-			<div class="container-fluid-item">
-				<span class="container-fluid-item-title">借款人</span>
-				<input type="text" id="txtLoanUserName" class="container-fluid-item-value" placeholder="姓名" />
-			</div>
-			<div class="container-fluid-item">
-				<span class="container-fluid-item-title">电话</span>
-				<input type="text" id="txtLoanUserPhone" class="container-fluid-item-value" placeholder="11位手机号码" />
-			</div>
-			<div class="container-fluid-item">
-				<span class="container-fluid-item-title">金额</span>
-				<input type="number" id="txtLoanAmountMoney" class="container-fluid-item-value" />元
-			</div>
-			<div class="container-fluid-item">
-				<span class="container-fluid-item-title">备注</span>
-				<textarea id="txtLoanRemark" class="container-fluid-item-value" rows="5"></textarea>
-			</div>
-			<div class="container-fluid-item">
-				<button type="button" class="btn btn-primary btn-block btn-lg" id="btnOK">确定</button>
-			</div>
+            <input type="text" id="inpSuggestDestination" value="" placeholder="搜索地点、路线"/>
+            <input type="button" onclick="mapModule.searchMap()" id="btnSearchMap" value="查找" />
+            <div id="divSearchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
+            <div id="divMapContainer" style="width: 1000px;height: 600px;"></div>
 		</div>
 	</body>
+    <script src="http://api.map.baidu.com/api?v=1.4"></script>
 	<script src="js/jQuery/jquery-1.11.2.min.js"></script>
 	<script src="js/fastclick/fastclick.js"></script>
 	<script src="js/lib/k-utils-fn.js"></script>
 	<script src="js/appDefined.js"></script>
-	<script>
+    <script src="js/map.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.js"></script>
+    <link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
+
+	<script type="text/javascript">
+        var map = mapModule.initMap("divMapContainer", "inpSuggestDestination");
+
+        mapModule.autoCompleteEvent(map, "inpSuggestDestination", "divSearchResultPanel");
+
+
 		$(function() {
 			FastClick && FastClick.attach(document.body); //调用fastClick加快手机端的click事件时间
 			$('.item li').on('click', function(e) {
@@ -95,9 +82,9 @@
 				$('.item li').removeClass('selected');
 				tar.addClass('selected');
 			});
-			$('#btnOK').on('click',function(e){
-				
-			});
+            $("#btnSearchMap").click(function(){
+                mapModule.searchMap(map);
+            });
 		});
 	</script>
 
