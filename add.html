@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="misapplication-tap-highlight" content="no" />
+		<meta name="HandheldFriendly" content="true" />
+		<meta name="MobileOptimized" content="320" />
+		<title>哗!收账</title>
+		<link rel="stylesheet" href="css/default.min.css" />
+		<link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="css/global.css" />
+		<style>
+			.container-fluid-item li {
+				float: left;
+				width: 50%;
+				line-height: 36px;
+				text-align: center;
+			}
+			.container-fluid-item-title {
+				width: 20%;
+				font-weight: bold;
+				text-align: right;
+				line-height: 48px;
+				height: 48px;
+				vertical-align: middle;
+				display: inline-block;
+			}
+			.container-fluid-item-title:after {
+				content: ':';
+			}
+			.container-fluid-item-value {
+				width: 70%;
+			}
+			.container-fluid-item li.selected {
+				border-radius: 3px;
+			}
+			.glyphicon{
+				color: rgba(0,255,0,1);
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="k-nav">
+			<span class="left" style="visibility: hidden;"><a href="#"><i class="glyphicon glyphicon-menu-left"></i>返回</a></span>
+			<span class="text">哗!收账</span>
+		</div>
+		<div class="container-fluid">
+			<div class="container-fluid-item">
+				<ul class="item">
+					<li class="selected"><a href="#" class="glyphicon glyphicon-export"><i>借出</i></a>
+					</li>
+					<li><a href="#" class="glyphicon glyphicon-import"><i>借入</i></a>
+					</li>
+				</ul>
+			</div>
+			<div class="container-fluid-item">
+				<span class="container-fluid-item-title">借款人</span>
+				<input type="text" id="txtLoanUserName" class="container-fluid-item-value" placeholder="姓名" />
+			</div>
+			<div class="container-fluid-item">
+				<span class="container-fluid-item-title">电话</span>
+				<input type="text" id="txtLoanUserPhone" class="container-fluid-item-value" placeholder="11位手机号码" />
+			</div>
+			<div class="container-fluid-item">
+				<span class="container-fluid-item-title">金额</span>
+				<input type="number" id="txtLoanAmountMoney" class="container-fluid-item-value" />元
+			</div>
+			<div class="container-fluid-item">
+				<span class="container-fluid-item-title">备注</span>
+				<textarea id="txtLoanRemark" class="container-fluid-item-value" rows="5"></textarea>
+			</div>
+			<div class="container-fluid-item">
+				<button type="button" class="btn btn-primary btn-block btn-lg" id="btnOK">确定</button>
+			</div>
+		</div>
+	</body>
+	<script src="js/jQuery/jquery-1.11.2.min.js"></script>
+	<script src="js/fastclick/fastclick.js"></script>
+	<script src="js/lib/k-utils-fn.js"></script>
+	<script src="js/appDefined.js"></script>
+	<script>
+		$(function() {
+			FastClick && FastClick.attach(document.body); //调用fastClick加快手机端的click事件时间
+			$('.item li').on('click', function(e) {
+				var tar = $(e.target);
+				tar = K.getTarparanet(tar, {
+					key: 'tagName',
+					value: 'LI'
+				});
+				$('.item li').removeClass('selected');
+				tar.addClass('selected');
+			});
+			$('#btnOK').on('click',function(e){
+				
+			});
+		});
+	</script>
+
+</html>

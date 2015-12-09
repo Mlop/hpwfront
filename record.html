@@ -9,10 +9,13 @@
 		<meta name="misapplication-tap-highlight" content="no" />
 		<meta name="HandheldFriendly" content="true" />
 		<meta name="MobileOptimized" content="320" />
-		<title>哗!收账</title>
+		<title>记账</title>
 		<link rel="stylesheet" href="css/default.min.css" />
 		<link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="css/global.css" />
+        <script src="js/function.js"></script>
+        <script src="js/user.js"></script>
+        <script src='js/base64.js' id="base64"></script>
 		<style>
 			.container-fluid {
 				margin: 0px;
@@ -135,7 +138,7 @@
 			.down {
 				color: rgba(0, 255, 0, 1);
 			}
-			ul {
+			ul{
 				margin: 0px;
 				padding: 0px;
 			}
@@ -144,78 +147,67 @@
 
 	<body>
 		<div class="k-nav">
-			<span class="left" style="visibility: hidden;"><a href="#"><i class="glyphicon glyphicon-menu-left"></i>返回</a></span>
-			<span class="text">哗!收账</span>
+			<span class="left"><a href="/index.html"><i class="glyphicon glyphicon-menu-left"></i>返回</a></span>
+			<span class="text">小计一笔</span>
 		</div>
-		<div class="container-fluid">
-			<div class="search-form">
-				<input id="txtSearchKey" type="text" class="form-control" placeholder="输入要查找的名字" />
-			</div>
-			<div class="list-form">
-				<ul>
-				</ul>
-			</div>
-		</div>
-		<div class="footer">
-			<ul>
-				<li><a href="#" data-target="index.html" class="glyphicon glyphicon-home"><i>主页</i></a>
-				</li>
-				<li class="selected"><a href="#" data-target="list.html" class="glyphicon glyphicon-list"><i>列表</i></a>
-				</li>
-				<li><a href="#" data-target="calendar.html" class="glyphicon glyphicon-calendar"><i>日历</i></a>
-				</li>
-				<li><a href="#" data-target="settings.html" class="glyphicon glyphicon-cog"><i>设置</i></a>
-				</li>
-			</ul>
-		</div>
+        <div class="alert alert-danger" style="display: none;" id="divError">错误！请进行一些更改。</div>
+        <form class="form-horizontal" id="account-form">
+            <input class="txt-iphone" name="Account[user_id]" value="" type="hidden" />
+            <div class="form-group">
+                <label class="col-sm-2 control-label">金额￥</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="Account[money]" placeholder="金额">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">借贷方式</label>
+                <div class="col-sm-8">
+                    <select id="selType" class="form-control" name="type">
+                        <option value="borrow" selected="selected">借入</option>
+                        <option value="lend">借出</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">联系人</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="Account[customer_id]" placeholder="联系人">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">还款日期</label>
+                <div class="col-sm-8">
+                    <input type="text" class="form-control" name="Account[confer_repayment_date]" placeholder="还款日期">
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="col-sm-2 control-label">备注</label>
+                <div class="col-sm-8">
+                    <textarea class="form-control" placeholder="备注" name="Account[note]"></textarea>
+                </div>
+            </div>
+
+            <button type="button" class="btn btn-info btn-block btn-opacity btn-lg" id="btnNext">保存</button>
+        </form>
 	</body>
-	<!-- 定义用户列表模板-->
-	<script id="tpl" type="text/plain">
-		<div class="user-info">
-			<span class="user-poto"><img src="{ url }" /></span>
-			<span class="user-detail"><span><!--<i class="glyphicon glyphicon-user"></i>--><em>{ username }</em></span>
-			<span><!--<i class="glyphicon glyphicon-earphone"></i>--><em>{ iphone }</em></span></span>
-			<span class="user-bill">
-				<span class="bill-total"><em><!--<sub class="glyphicon glyphicon-yen"></sub>-->{ bill.total }</em></span>
-			<span class="bill-item">
-					<em class="up"><!--<sub class="glyphicon glyphicon-arrow-up"></sub>-->{ bill.owe }</em>
-					<em class="down"><!--<sub class="glyphicon glyphicon-arrow-down"></sub>-->{ bill.income }</em>
-				</span>
-			</span>
-			<span class="menu-right"><i class="glyphicon glyphicon-menu-right"></i></span>
-		</div>
-	</script>
 
 	<script src="js/jQuery/jquery-1.11.2.min.js"></script>
 	<script src="js/fastclick/fastclick.js"></script>
 	<script src="js/appDefined.js"></script>
 	<script src="js/lib/k-utils-fn.js"></script>
 	<script src="js/lib/k-utils-plug.js"></script>
-	<script src="js/APPDataInterface.js"></script>
 	<script src="js/global.js"></script>
 	<script>
 		$(function() {
+            if (!userModule.isLogin()) {
+                window.location.href = "/login.html";
+            }
 			$('.container-fluid').css({
 				'height': window.screen.height - 96 + 'px'
 			});
-			getDataInterFace({
-				code: 2,
-				type: 1
-			}, function(rData) {
-				rData = $.parseJSON(rData);
-				var tpl = new Template($('#tpl').html()),
-					htmls = [];
-				for (var i = 0, l = rData.length; i < l; i++) {
-					htmls.push('<li>' + tpl.render(rData[i]) + '</li>');
-				}
-				$('.list-form ul').empty().html(htmls.join(''));
-			});
-			$('.glyphicon-earphone ~ em').on('click', function(e) {
-				var tar = $(e.target),
-					phone = tar.html();
-				APP.showActionSheet(phone);
-			});
+            $("#btnNext").click(function(){
+                userModule.createRecord();
+            });
 		});
 	</script>
-
 </html>

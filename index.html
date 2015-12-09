@@ -93,26 +93,26 @@
 		</div>
 		<div class="container-fluid">
 			<div class="container-empty"></div>
-			<button type="button" class="btn btn-primary btn-block btn-lg" id="btnNext">小记一笔</button>
-			<div class="container-footer">
+			<button type="button" class="btn btn-primary btn-block btn-lg" id="btnRecord">小记一笔</button>
+            <button type="button" class="btn btn-primary btn-block btn-lg" id="btnMap">查看地图</button>
+			<div class="container-footer" id="tmpData">
 				<div class="container-footer-con">
 					<span class="title">出(本月)</span>
 					<span class="context">
-						<em>4000</em>
-						<sub><i class="glyphicon glyphicon-arrow-up">1000</i></sub>
-						
+						<em data-render-column="month_lend">0</em>
+						<sub><i class="glyphicon glyphicon-plus" data-render-column="month_lend_growth">0</i></sub>
 					</span>
 					<span class="bottom">
-						<em>总计：</em><em>10000</em>
+						<em>总计：</em><em data-render-column="total_lend">0</em>
 					</span>
 				</div>
 				<div class="container-footer-con container-split"></div>
 				<div class="container-footer-con"><span class="title">入(本月)</span>
 					<span class="context">
-						<em>4000</em>
-						<sub><i class="glyphicon glyphicon-arrow-down">1000</i></sub>
+						<em data-render-column="month_borrow">0</em>
+						<sub><i class="glyphicon glyphicon-minus glyphicon-arrow-down" data-render-column="month_borrow_growth">0</i></sub>
 					</span>
-					<span class="bottom"><em>总计：</em><em>10000</em></span>
+					<span class="bottom"><em>总计：</em><em data-render-column="total_borrow">0</em></span>
 				</div>
 			</div>
 		</div>
@@ -133,10 +133,25 @@
 	<script src="js/jQuery/jquery-1.11.2.min.js"></script>
 	<script src="js/fastclick/fastclick.js"></script>
 	<script src="js/appDefined.js"></script>
+	<script src="js/APPDataInterface.js"></script>
+	<script src="js/lib/k-utils-fn.js"></script>
 	<script src="js/global.js"></script>
 	<script>
 		$(function() {
-			APP.setStatusBarBackground('#038eef');
+			//APP.setStatusBarBackground('#038eef');
+			$('#btnRecord').on('click',function(){
+				window.location.href='add.html';
+			});
+            $('#btnMap').on('click',function(){
+                window.location.href='map.html';
+            });
+			getDataInterFace({code:1},function(rData){
+				rData=$.parseJSON(rData);
+				$('*[data-render-column]',$('#tmpData')).each(function(){
+					var tar=$(this),column=tar.attr('data-render-column');
+					tar.html(rData[column]);
+				});
+			});
 		});
 	</script>
 

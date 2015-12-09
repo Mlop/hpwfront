@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+		<meta name="apple-mobile-web-app-capable" content="yes" />
+		<meta name="misapplication-tap-highlight" content="no" />
+		<meta name="HandheldFriendly" content="true" />
+		<meta name="MobileOptimized" content="320" />
+		<title>地图</title>
+		<link rel="stylesheet" href="css/default.min.css" />
+		<link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="css/global.css" />
+		<style>
+			.container-fluid-item li {
+				float: left;
+				width: 50%;
+				line-height: 36px;
+				text-align: center;
+			}
+			.container-fluid-item-title {
+				width: 20%;
+				font-weight: bold;
+				text-align: right;
+				line-height: 48px;
+				height: 48px;
+				vertical-align: middle;
+				display: inline-block;
+			}
+			.container-fluid-item-title:after {
+				content: ':';
+			}
+			.container-fluid-item-value {
+				width: 70%;
+			}
+			.container-fluid-item li.selected {
+				border-radius: 3px;
+			}
+			.glyphicon{
+				color: rgba(0,255,0,1);
+			}
+		</style>
+	</head>
+
+	<body>
+		<div class="k-nav">
+			<span class="left" style="visibility: hidden;"><a href="#"><i class="glyphicon glyphicon-menu-left"></i>返回</a></span>
+			<span class="text">哗!收账</span>
+		</div>
+		<div class="container-fluid">
+            <input type="text" id="inpSuggestDestination" value="" placeholder="搜索地点、路线"/>
+            <input type="button" onclick="mapModule.searchMap()" id="btnSearchMap" value="查找" />
+            <div id="divSearchResultPanel" style="border:1px solid #C0C0C0;width:150px;height:auto; display:none;"></div>
+            <div id="divMapContainer" style="width: 1000px;height: 600px;"></div>
+		</div>
+	</body>
+    <script src="http://api.map.baidu.com/api?v=1.4"></script>
+	<script src="js/jQuery/jquery-1.11.2.min.js"></script>
+	<script src="js/fastclick/fastclick.js"></script>
+	<script src="js/lib/k-utils-fn.js"></script>
+	<script src="js/appDefined.js"></script>
+    <script src="js/map.js"></script>
+    <script type="text/javascript" src="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.js"></script>
+    <link rel="stylesheet" href="http://api.map.baidu.com/library/SearchInfoWindow/1.5/src/SearchInfoWindow_min.css" />
+
+	<script type="text/javascript">
+        var map = mapModule.initMap("divMapContainer", "inpSuggestDestination");
+
+        mapModule.autoCompleteEvent(map, "inpSuggestDestination", "divSearchResultPanel");
+
+
+		$(function() {
+			FastClick && FastClick.attach(document.body); //调用fastClick加快手机端的click事件时间
+			$('.item li').on('click', function(e) {
+				var tar = $(e.target);
+				tar = K.getTarparanet(tar, {
+					key: 'tagName',
+					value: 'LI'
+				});
+				$('.item li').removeClass('selected');
+				tar.addClass('selected');
+			});
+            $("#btnSearchMap").click(function(){
+                mapModule.searchMap(map);
+            });
+		});
+	</script>
+
+</html>
