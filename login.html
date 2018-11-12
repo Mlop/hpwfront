@@ -96,14 +96,18 @@
 	</head>
 
 	<body>
+	<div class="k-nav">
+		<span class="left"><a href="index.html"><i class="glyphicon glyphicon-menu-left"></i>返回</a></span>
+		<span class="text">记账</span>
+	</div>
 		<div class="background login">
 			<div class="logo-icon">
 				<img src="img/logo.png" class="logo" />
 			</div>
 			<div class="input-group text-center">
 				<div class="input">
-					<span>+86</span>
-					<input class="txt-iphone" type="tel" id="txtIphone" placeholder="手机号" />
+					<span>用户名</span>
+					<input class="txt-iphone" type="tel" id="txtIphone" placeholder="用户名" />
 				</div>
 				<div class="input noborder">
 					<span>密码</span>
@@ -116,6 +120,7 @@
 	</body>
 	<script src="js/jQuery/jquery-1.11.2.min.js"></script>
 	<script src="js/fastclick/fastclick.js"></script>
+	<script src="js/function.js"></script>
 	<script>
 		$(function() {
 			FastClick && FastClick.attach(document.body); //调用fastClick加快手机端的click事件时间
@@ -131,6 +136,18 @@
 			$btnLogin.on('click', function() {
 				//校验用户名密码
 				checkLogin();
+                $.ajax({
+                    url: apiUrl + "user/login",
+					type: "post",
+					data: {"name":$("#txtIphone").val(), "password":$("#txtPassword").val()},
+                    success: function (result) {
+                        if (result.code) {
+                            localStorage.setItem("api_token",result.data.api_token);
+                            window.location.href="index.html";
+                        }
+                    }
+                });
+
 			});
 			/*$(document).on('keydown', function(e) {
 				if (e.keyCode == 13) { //校验回车事件

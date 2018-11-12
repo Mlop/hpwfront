@@ -1,9 +1,10 @@
 //定义全局变量
-var apiUrl = "http://local.hpw-vera.com/";
+var apiUrl = "http://jz.api.com/";
+var API_TOKEN = localStorage.getItem('api_token');
 var CLIENTSTATUS = {
     login: false,
     uid: 0,
-    name: ''
+    name: 'jizhang'
 };
 var globalModule = (function() {
     'use strict';

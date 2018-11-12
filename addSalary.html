@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="misapplication-tap-highlight" content="no" />
+    <meta name="HandheldFriendly" content="true" />
+    <meta name="MobileOptimized" content="320" />
+    <title>哗!收账</title>
+    <!--<link rel="stylesheet" href="css/default.min.css" />-->
+    <link rel="stylesheet" href="js/bootstrap/css/font.min.css" />
+    <link rel="stylesheet" href="js/bootstrap4.1.3/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/global.css" />
+    <style>
+        .k-nav{
+            height: 48px;
+            width: 100%;
+            background-color: rgba(3,142,239,1);
+            background: -webkit-gradient(linear,center top,center bottom,from(rgba(3,142,239,.7)), to(rgba(3,142,239,1)));
+            background: -o-gradient(linear,center top,center bottom,from(rgba(3,142,239,.7)), to(rgba(3,142,239,1)));
+            background: -moz-gradient(linear,center top,center bottom,from(rgba(3,142,239,.7)), to(rgba(3,142,239,1)));
+            background: -ms-gradient(linear,center top,center bottom,from(rgba(3,142,239,.7)), to(rgba(3,142,239,1)));
+            background: gradient(linear,center top,center bottom,from(rgba(3,142,239,.7)), to(rgba(3,142,239,1)));
+            line-height: 100%;
+            text-align: center;
+            color: rgba(255,255,255,1);
+            font-family: 'Trebuchet MS', Helvetica, 'Microsoft YaHei', Georgia, sans-serif;
+            font-size: 16px;
+            border-bottom: 1px solid rgba(127,127,127,.5);
+        }
+        .k-nav a{
+            color: rgba(255,255,255,1);
+            text-decoration: none;
+        }
+        .k-nav a:hover{
+            text-decoration: none;
+        }
+        .k-nav > i,.k-nav > span{
+            line-height: 48px;
+        }
+        .k-nav > span{
+            display: inline-block;
+        }
+        .k-nav > span.left{
+            float: left;
+        }
+        .k-nav .text{
+            margin-left: -42px;
+        }
+
+        .row{
+            margin-left: 0;
+            margin-right: 0;
+        }
+        .input-group-btn .btn.btn-default.dropdown-toggle {
+            border-top-left-radius: 0;
+            border-bottom-left-radius: 0;
+        }
+
+        .dropdown-menu > table tr > td {
+            border-top-width: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="k-nav">
+        <span class="left"><a href="index.html"><i class="glyphicon glyphicon-menu-left"></i></a></span>
+        <span class="text">记账</span>
+    </div>
+    <div>
+        <form method="post">
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">工人名</label>
+                <div class="col-sm-10 input-group">
+                    <input type="text" class="form-control" placeholder="请输入工人姓名" id="txtUsername" autocomplete="off">
+                    <div class="input-group-btn">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="">
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right" role="menu" style="padding-top: 0px; max-height: 375px; max-width: 800px; overflow: auto; width: auto; transition: all 0.3s ease 0s;">
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">工资</label>
+                <div class="col-sm-10">
+                    <input type="text" class="form-control" name="cash" placeholder="请输入工资">
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-sm-2 col-form-label">餐费</label>
+                <div class="col-auto col-sm-8">
+                    <div class="input-group">
+                        <input type="text" class="form-control" name="meals" placeholder="请输入要扣除的餐费">
+                    </div>
+                </div>
+                <div class="form-check mb-2 mr-sm-2">
+                    <input class="form-check-input" type="checkbox" checked="checked" id="inlineFormCheck">
+                    <label class="form-check-label" for="inlineFormCheck">
+                        扣除
+                    </label>
+                </div>
+            </div>
+            <input type="hidden" name="type" value="salary"/>
+            <input type="hidden" name="worker_id" value="0"/>
+            <button type="button" class="btn btn-info btn-block btn-primary btn-lg" id="btnAdd">确定</button>
+        </form>
+    </div>
+</body>
+
+<script src="js/jQuery/jquery-1.11.2.min.js"></script>
+<script src="js/bootstrap4.1.3/js/bootstrap.min.js"></script>
+<script src="js/bootstrap4.1.3/js/bootstrap-suggest.js"></script>
+<script src="js/fastclick/fastclick.js"></script>
+<!--<script src="js/appDefined.js"></script>-->
+<!--<script src="js/lib/k-utils-fn.js"></script>-->
+<!--<script src="js/lib/k-utils-plug.js"></script>-->
+<script src="js/global.js"></script>
+<script src="js/function.js"></script>
+<script>
+   $(function(){
+       $("#txtUsername").bsSuggest({
+           emptyTip: '未检索到匹配的数据',
+           showBtn: false,
+           showHeader: true, //显示 header
+           effectiveFieldsAlias: {name: "姓名", salary: "工资￥"},
+           clearable: true,
+           allowNoKeyword: true,   //是否允许无关键字时请求数据。为 false 则无输入时不执行过滤请求
+           multiWord: true,         //以分隔符号分割的多关键字支持
+           separator: ",",          //多关键字支持时的分隔符，默认为空格
+           effectiveFields: ["name", "salary"],
+           getDataMethod: "url",    //获取数据的方式，总是从 URL 获取
+           url: apiUrl + 'worker/search?api_token='+API_TOKEN,
+           // url: 'http://unionsug.baidu.com/su?p=3&wd=', //优先从url ajax 请求 json 帮助数据，注意最后一个参数为关键字请求参数
+           // jsonp: 'cb',                        //如果从 url 获取数据，并且需要跨域，则该参数必须设置
+           fnProcessData: function (json) {    // url 获取数据时，对数据的处理，作为 fnGetData 的回调函数
+              console.log('回调数据',json);
+               var index, len, data = {value: []}, fee = 0, workers = [], worker;
+               if (!json || !json.data.workers || json.data.workers.length === 0) {
+                   return false;
+               }
+
+               len = json.data.workers.length;
+               fee = json.data.meals_fee;
+                // workers = json.data.workers;
+               for (index = 0; index < len; index++) {
+                   worker = json.data.workers[index];
+                   data.value.push({
+                       name: worker["name"],
+                       id: worker["id"],
+                       salary: worker["salary"],
+                       fee: fee
+                   });
+               }
+                // data.defaults = 'baidu';
+
+               //字符串转化为 js 对象
+               return data;
+           }
+       }).on('onDataRequestSuccess', function (e, result) {
+           console.log('onDataRequestSuccess: ', result);
+       }).on('onSetSelectValue', function (e, keyword, data) {
+           console.log('onSetSelectValue: ', keyword, data);
+           $("form [name='meals']").val(data.fee);
+           $("form [name='cash']").val(data.salary);
+           $("form [name='worker_id']").val(data.id);
+       }).on('onUnsetSelectValue', function () {
+           console.log("onUnsetSelectValue");
+       });
+       $("#btnAdd").on('click', function () {
+           var data = $("form").serializeArray();
+           var param = {};
+           $.each(data,function(index,field){
+               param[field.name] = field.value;//通过变量，将属性值，属性一起放到对象中
+           });
+
+           param['api_token'] = API_TOKEN;
+           $.ajax({
+               url: apiUrl + "user/salary",
+               type: "post",
+               data: param,
+               success: function (result) {
+                   console.log(result);
+                   if (result.code) {
+                       window.location.href = "index.html";
+                   } else {
+                       console.log(result);
+                   }
+               }
+           });
+       });
+   })
+</script>
+
+</html>

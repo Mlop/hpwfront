@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html>
-
 	<head>
 		<meta charset="utf-8">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
@@ -11,7 +10,9 @@
 		<meta name="MobileOptimized" content="320" />
 		<title>哗!收账</title>
 		<link rel="stylesheet" href="css/default.min.css" />
-		<link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css" />
+		<!--<link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css" />-->
+		<link rel="stylesheet" href="js/bootstrap/css/font.min.css" />
+		<link rel="stylesheet" href="js/bootstrap4.1.3/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="css/global.css" />
 		<style>
 			body {
@@ -157,30 +158,40 @@
 	<body>
 		<div class="k-nav">
 			<span class="left" style="visibility: hidden;"><a href="#"><i class="glyphicon glyphicon-menu-left"></i>返回</a></span>
-			<span class="text">哗!收账</span>
+			<span class="text">记账</span>
 		</div>
 		<div class="container-fluid">
+
 			<div class="user-info">
+				<script id="tpl" type="text/plain">
 				<span class="user-poto">
 					<img src="img/gy.jpg" />
 				</span>
 				<span class="user-detail">
-					<span><i class="glyphicon glyphicon-user"></i><em>张怡珂</em></span>
-				<span><i class="glyphicon glyphicon-earphone"></i><em>1380000000</em></span>
+					<span><i class="glyphicon glyphicon-user"></i><em>{ name }</em></span>
+				<span><i class="glyphicon glyphicon-earphone"></i><em>{ email }</em></span>
 				<span><i class="glyphicon glyphicon-earphone"></i><em>458390123</em></span>
 				</span>
 				<span class="menu-right"><i class="glyphicon glyphicon-menu-right"></i></span>
+				</script>
 			</div>
 			<div class="settings">
 				<ul>
-					<li><span class="text-left">自动上传数据</span>
-						<span class="text-right">
-							<div class="slide on">  
-						      <input type="checkbox" value="None" id="slideOne" name="check" checked />
-						      <label for="slideOne"></label>
-						    </div>
+					<li><span class="text-left">餐费</span>
+						<span class="text-right" data-toggle="modal" data-target="#feeModal">
+							<span class="menu-right">
+								<em id="spMeals"></em>
+								<i class="glyphicon glyphicon-menu-right"></i>
+							</span>
 						</span>
 					</li>
+					<!--<li><span class="text-left">添加拨款项</span>-->
+						<!--<span class="text-right">-->
+							<!--<span class="menu-right">-->
+								<!--<i class="glyphicon glyphicon-menu-right"></i>-->
+							<!--</span>-->
+						<!--</span>-->
+					<!--</li>-->
 					<li><span class="text-left">自动统计数据</span>
 						<span class="text-right">
 							<div class="slide on">  
@@ -196,7 +207,33 @@
 					</li>
 				</ul>
 			</div>
+
+			<!-- Modal -->
+			<div class="modal fade" id="feeModal" tabindex="-1" role="dialog" aria-labelledby="feeModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="feeModalLabel">设置餐费</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<div class="input-group mb-2">
+								<input type="text" class="form-control" id="txtMeals" placeholder="请输入餐费">
+								<div class="input-group-prepend">
+									<div class="input-group-text">￥</div>
+								</div>
+							</div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary" id="btnSaveFee">保存</button>
+						</div>
+					</div>
+				</div>
+			</div>
 		</div>
+
 		<div class="footer">
 			<ul>
 				<li><a href="#" data-target="index.html" class="glyphicon glyphicon-home"><i>主页</i></a>
@@ -211,11 +248,19 @@
 		</div>
 	</body>
 	<script src="js/jQuery/jquery-1.11.2.min.js"></script>
+	<script src="js/bootstrap4.1.3/js/bootstrap.min.js"></script>
 	<script src="js/fastclick/fastclick.js"></script>
+	<script src="js/lib/k-utils-fn.js"></script>
+	<script src="js/lib/k-utils-plug.js"></script>
 	<script src="js/appDefined.js"></script>
 	<script src="js/global.js"></script>
+	<script src="js/function.js"></script>
 	<script>
 		$(function() {
+            // $('#exampleModal').modal('show');
+            $('#exampleModal').on('shown.bs.modal', function () {
+                $('#txtMeals').trigger('focus')
+            })
 			$('.user-info').on('click', function(e) {
 				APP.alert('程序开发中','友情提示');
 			});
@@ -226,6 +271,36 @@
 					p = $('#' + tarFor).parent();
 				check.is(":checked") ? p.removeClass('on') : p.addClass('on');
 			});
+            $.ajax({
+                data:{api_token: API_TOKEN},
+                url: apiUrl + "user/get",
+                success: function(result) {
+                    if (result.code) {
+                        //餐费
+						var fee = result.data.meals_fee;
+                        $("#spMeals").text(fee);
+                        $("#txtMeals").val(fee);
+						//用户信息
+                        var tpl = new Template($('#tpl').html());
+                        $('.user-info').empty().html(tpl.render(result.data));
+                    }
+                }
+            });
+            $("#btnSaveFee").click(function () {
+                $.ajax({
+					type: "post",
+                    data:{api_token: API_TOKEN, value: $("#txtMeals").val()},
+                    url: apiUrl + "settings/update/meals",
+                    success: function(result) {
+					    console.log(result);
+                        if (result.code) {
+                            $('#exampleModal').modal('hide');
+                            //餐费
+                            $("#spMeals").text(result.data.value);
+                        }
+                    }
+                });
+            });
 		});
 	</script>
 

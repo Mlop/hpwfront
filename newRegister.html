@@ -72,23 +72,59 @@
 		</div>
 		<div class="input-group text-center">
 			<div class="input noborder">
-				<span>+86</span>
-				<input class="txt-iphone" type="tel" id="txtIphone" placeholder="手机号" />
+				<span>用户名</span>
+				<input class="txt-iphone" type="text" id="txtName" placeholder="用户名" />
+			</div>
+			<div class="input noborder">
+				<span>邮箱</span>
+				<input class="txt-iphone" type="text" id="txtEmail" placeholder="邮箱" />
+			</div>
+			<div class="input noborder">
+				<span>手机</span>
+				<input class="txt-iphone" type="tel" id="txtPhone" placeholder="手机号" />
+			</div>
+			<div class="input noborder">
+				<span>密码</span>
+				<input class="txt-iphone" type="password" id="txtPassword" placeholder="密码" />
+			</div>
+			<div class="input noborder">
+				<span>确认密码</span>
+				<input class="txt-iphone" type="password" id="txtPasswordConfirm" placeholder="和密码相同" />
 			</div>
 		</div>
-		<button type="button" class="btn btn-info btn-block btn-opacity btn-lg" id="btnNext" disabled="disabled">下一步</button>
+		<button type="button" class="btn btn-primary btn-block btn-info btn-lg" id="btnRegister">确定</button>
 	</body>
 	<script src="js/jQuery/jquery-1.11.2.min.js"></script>
 	<script src="js/fastclick/fastclick.js"></script>
+	<script src="js/function.js"></script>
 	<script>
 		$(function() {
-			var $btnNext=$('#btnNext');
-			$('#txtIphone').on('keypress', function() {
-				if ($(this).val()) {
-					$btnNext.removeAttr('disabled');
-					$btnNext.removeClass('btn-info btn-opacity').addClass('btn-primary');
-				}
-			});
+			var $btnNext=$('#btnRegister');
+            $btnNext.on('click', function () {
+                $.ajax({
+                    url: apiUrl + "user/register",
+                    type: "post",
+                    data: {
+                        "email": $("#txtEmail").val(),
+                        "name": $("#txtName").val(),
+						"phone": $("#txtPhone").val(),
+						"password": $("#txtPassword").val(),
+                        "password_confirmation": $("#txtPasswordConfirm").val(),
+					},
+                    success: function (result) {
+                        if (result.code) {
+                            localStorage.setItem("api_token",result.data.api_token);
+                            window.location.href="index.html";
+                        }
+                    }
+                });
+            })
+			// $('#txtPhone').on('keypress', function() {
+			// 	if ($(this).val()) {
+			// 		$btnNext.removeAttr('disabled');
+			// 		$btnNext.removeClass('btn-info btn-opacity').addClass('btn-primary');
+			// 	}
+			// });
 		});
 	</script>
 

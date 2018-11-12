@@ -89,30 +89,35 @@
 	<body>
 		<div class="k-nav">
 			<span class="left" style="visibility: hidden;"><a href="#"><i class="glyphicon glyphicon-menu-left"></i>返回</a></span>
-			<span class="text">哗!收账</span>
+			<span class="text">记账</span>
+			<span class="right" style="float: right;"><a href="login.html">登录</a></span>
 		</div>
 		<div class="container-fluid">
 			<div class="container-empty"></div>
 			<button type="button" class="btn btn-primary btn-block btn-lg" id="btnNext">小记一笔</button>
+
 			<div class="container-footer">
 				<div class="container-footer-con">
-					<span class="title">出(本月)</span>
-					<span class="context">
-						<em>4000</em>
-						<sub><i class="glyphicon glyphicon-arrow-up">1000</i></sub>
+					<span class="title">支出(总)</span>
+					<span class="context text-danger">
+						<em>0</em>
+						<sub><i class="glyphicon glyphicon-arrow-up">0</i></sub>
 						
 					</span>
 					<span class="bottom">
-						<em>总计：</em><em>10000</em>
+						<em>总计：</em><em>0</em>
 					</span>
 				</div>
 				<div class="container-footer-con container-split"></div>
-				<div class="container-footer-con"><span class="title">入(本月)</span>
-					<span class="context">
+				<div class="container-footer-con"><span class="title">收入(总)</span>
+					<span class="context text-success">
 						<em>4000</em>
-						<sub><i class="glyphicon glyphicon-arrow-down">1000</i></sub>
+						<sub><i class="glyphicon glyphicon-arrow-down">0</i></sub>
 					</span>
-					<span class="bottom"><em>总计：</em><em>10000</em></span>
+					<span class="bottom"><em>总计：</em>0<em></em></span>
+				</div>
+				<div class="container-fluid">
+					<span class="lead text-primary text-center">剩余：<em>0</em></span>
 				</div>
 			</div>
 		</div>
@@ -134,9 +139,27 @@
 	<script src="js/fastclick/fastclick.js"></script>
 	<script src="js/appDefined.js"></script>
 	<script src="js/global.js"></script>
+	<script src="js/function.js"></script>
 	<script>
 		$(function() {
-			APP.setStatusBarBackground('#038eef');
+
+			// APP.setStatusBarBackground('#038eef');
+            $("#btnNext").on('click', function () {
+				window.location.href = "addSalary.html";
+            });
+            $.ajax({
+				data:{api_token: API_TOKEN},
+                url: apiUrl + "report/user/contact",
+                success: function (result) {
+                    console.log(result);
+                    if (result.code) {
+                        var data = result.data;
+                        $(".text-danger em").html(data.totalPay);
+                        $(".text-success em").html(data.totalIn);
+                        $(".text-primary em").html(data.balance);
+                    }
+                }
+            });
 		});
 	</script>
 

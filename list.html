@@ -139,13 +139,33 @@
 				margin: 0px;
 				padding: 0px;
 			}
+			.first-name{
+				width: 48px;
+				height: 48px;
+				display: inline-block;
+				border-radius: 50%;
+				background-color: white;
+				line-height: 48px;
+				margin-top: 4px;
+				font-size: 18px;
+				font-weight: bold;
+			}
+			.first-name.yellow{
+				background-color: yellow;
+			}
+			.first-name.pink{
+				background-color: pink;
+			}
+			.first-name.green{
+				background-color: green;
+			}
 		</style>
 	</head>
 
 	<body>
 		<div class="k-nav">
 			<span class="left" style="visibility: hidden;"><a href="#"><i class="glyphicon glyphicon-menu-left"></i>返回</a></span>
-			<span class="text">哗!收账</span>
+			<span class="text">记账</span>
 		</div>
 		<div class="container-fluid">
 			<div class="search-form">
@@ -172,7 +192,7 @@
 	<!-- 定义用户列表模板-->
 	<script id="tpl" type="text/plain">
 		<div class="user-info">
-			<span class="user-poto"><img src="{ url }" /></span>
+			<span class="user-poto">{strHtml}</span>
 			<span class="user-detail"><span><i class="glyphicon glyphicon-user"></i><em>{ username }</em></span>
 			<span><i class="glyphicon glyphicon-earphone"></i><em>{ iphone }</em></span></span>
 			<span class="user-bill">
@@ -192,47 +212,52 @@
 	<script src="js/lib/k-utils-fn.js"></script>
 	<script src="js/lib/k-utils-plug.js"></script>
 	<script src="js/global.js"></script>
+	<script src="js/function.js"></script>
+	<script src="js/list.js"></script>
 	<script>
-		$(function() {
-			$('.container-fluid').css({
-				'height': window.screen.height - 96 + 'px'
-			});
-			var data = getUserList(),
-				tpl = new Template($('#tpl').html()),
-				htmls = [];
-			for (var i = 0, l = data.length; i < l; i++) {
-				htmls.push('<li>' + tpl.render(data[i]) + '</li>');
-			}
-			$('.list-form ul').empty().html(htmls.join(''));
-			
-			$('.glyphicon-earphone ~ em').on('click',function(e){
-				var tar = $(e.target),phone=tar.html();
-				APP.showActionSheet(phone);
-			});
-		});
-
-		function getUserList() {
-			var r = [],
-				k = window.K,
-				owe = 0,
-				income = 0;
-			var headimgs = ['fbb.jpg', 'fsf.jpg', 'gy.jpg', 'hxm.jpg', 'jy.jpg', 'lyx.jpg', 'sc.jpg'];
-			for (var i = 0, l = 50; i < l; i++) {
-				owe = K.getRandom(0, 50000);
-				income = K.getRandom(0, 50000);
-				r.push({
-					url: 'img/headimg/' + headimgs[K.getRandomByM(0, 6)],
-					username: K.getUserName(),
-					iphone: K.getRandomPhone('###-####-####'),
-					bill: {
-						total: owe + income,
-						owe: owe,
-						income: income
-					}
-				});
-			}
-			return r;
-		}
+		// $(function() {
+		//
+		// 	$('.container-fluid').css({
+		// 		'height': window.screen.height - 96 + 'px'
+		// 	});
+		// 	var data = getUserList(),
+		// 		tpl = new Template($('#tpl').html()),
+		// 		htmls = [];
+		// 	for (var i = 0, l = data.length; i < l; i++) {
+		// 		htmls.push('<li>' + tpl.render(data[i]) + '</li>');
+		// 	}
+		// 	$('.list-form ul').empty().html(htmls.join(''));
+		//
+		// 	$('.glyphicon-earphone ~ em').on('click',function(e){
+		// 		var tar = $(e.target),phone=tar.html();
+		// 		APP.showActionSheet(phone);
+		// 	});
+		// });
+		//
+		// function getUserList() {
+		// 	var r = [],
+		// 		k = window.K,
+		// 		owe = 0,
+		// 		income = 0;
+		// 	var headimgs = ['fbb.jpg', 'fsf.jpg', 'gy.jpg', 'hxm.jpg', 'jy.jpg', 'lyx.jpg', 'sc.jpg'];
+		// 	for (var i = 0, l = 50; i < l; i++) {
+		// 		owe = K.getRandom(0, 50000);
+		// 		income = K.getRandom(0, 50000);
+		// 		r.push({
+		// 			url: 'img/headimg/' + headimgs[K.getRandomByM(0, 6)],
+		// 			username: K.getUserName(),
+		// 			iphone: K.getRandomPhone('###-####-####'),
+		// 			bill: {
+		// 				total: owe + income,
+		// 				owe: owe,
+		// 				income: income
+		// 			}
+		// 		});
+		// 	}
+		// 	return r;
+		//
+		//
+		// }
 	</script>
 
 </html>
