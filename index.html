@@ -11,7 +11,8 @@
 		<meta name="MobileOptimized" content="320" />
 		<title>哗!收账</title>
 		<link rel="stylesheet" href="css/default.min.css" />
-		<link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css" />
+		<link rel="stylesheet" href="js/bootstrap/css/font.min.css" />
+		<link rel="stylesheet" href="js/bootstrap4.1.3/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="css/global.css" />
 		<style>
 			.container-empty {
@@ -94,7 +95,49 @@
 		</div>
 		<div class="container-fluid">
 			<div class="container-empty"></div>
-			<button type="button" class="btn btn-primary btn-block btn-lg" id="btnNext">小记一笔</button>
+			<!--<button type="button" class="btn btn-primary btn-block btn-lg" id="btnNext">记工资</button>-->
+			<!--<button type="button" class="btn btn-primary btn-block btn-lg" id="btnNext">加工人</button>-->
+			<button type="button" class="btn btn-success btn-block" data-toggle="modal" data-target="#workerModal">加工人</button>
+			<button type="button" class="btn btn-info btn-block" id="btnNext">记工资</button>
+
+			<!-- worker Modal -->
+			<div class="modal fade" id="workerModal" tabindex="-1" role="dialog" aria-labelledby="workerModalLabel" aria-hidden="true">
+				<div class="modal-dialog" role="document">
+					<div class="modal-content">
+						<div class="modal-header">
+							<h5 class="modal-title" id="workerModalLabel">设置餐费</h5>
+							<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+								<span aria-hidden="true">&times;</span>
+							</button>
+						</div>
+						<div class="modal-body">
+							<form>
+								<div class="form-group">
+									<label>姓名</label>
+									<input type="text" class="form-control" name="name" aria-describedby="emailHelp" placeholder="请输入工人名称">
+								</div>
+								<div class="form-group">
+									<label>手机</label>
+									<input type="tel" class="form-control" name="phone" aria-describedby="emailHelp" placeholder="请输入手机号">
+								</div>
+								<div class="form-group">
+									<label>工资</label>
+									<div class="input-group mb-2">
+										<input type="text" class="form-control" name="salary" placeholder="请输入工资">
+										<div class="input-group-prepend">
+											<div class="input-group-text">￥</div>
+										</div>
+									</div>
+								</div>
+							</form>
+
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-primary" id="btnSaveWorker">保存</button>
+						</div>
+					</div>
+				</div>
+			</div>
 
 			<div class="container-footer">
 				<div class="container-footer-con">
@@ -102,7 +145,6 @@
 					<span class="context text-danger">
 						<em>0</em>
 						<sub><i class="glyphicon glyphicon-arrow-up">0</i></sub>
-						
 					</span>
 					<span class="bottom">
 						<em>总计：</em><em>0</em>
@@ -111,7 +153,7 @@
 				<div class="container-footer-con container-split"></div>
 				<div class="container-footer-con"><span class="title">收入(总)</span>
 					<span class="context text-success">
-						<em>4000</em>
+						<em>0</em>
 						<sub><i class="glyphicon glyphicon-arrow-down">0</i></sub>
 					</span>
 					<span class="bottom"><em>总计：</em>0<em></em></span>
@@ -136,16 +178,46 @@
 	</body>
 
 	<script src="js/jQuery/jquery-1.11.2.min.js"></script>
+	<script src="js/bootstrap4.1.3/js/bootstrap.min.js"></script>
 	<script src="js/fastclick/fastclick.js"></script>
 	<script src="js/appDefined.js"></script>
 	<script src="js/global.js"></script>
 	<script src="js/function.js"></script>
 	<script>
 		$(function() {
-
+            // $('#workerModal').modal('show');
+            $('#workerModal').on('shown.bs.modal', function () {
+                $('form [name="name"]').trigger('focus');
+            });
 			// APP.setStatusBarBackground('#038eef');
             $("#btnNext").on('click', function () {
 				window.location.href = "addSalary.html";
+            });
+            $("#btnSaveWorker").click(function () {
+                var data = $("form").serializeArray();
+                var param = {};
+                $.each(data, function (index, field) {
+					param[field.name] = field.value;
+                });
+                param['api_token'] = API_TOKEN;
+				$.ajax({
+					type: 'post',
+                    data: param,
+                    url: apiUrl + "worker/register",
+                    success: function (result) {
+                        console.log(result);
+                        if (result.code) {
+                            $("#workerModal").modal('hide');
+                        //     var data = result.data;
+                        //     $(".text-danger em").html(data.totalPay);
+                        //     $(".text-success em").html(data.totalIn);
+                        //     $(".text-primary em").html(data.balance);
+                        }
+                        // else {
+                        //     window.location.href = "login.html";
+                        // }
+                    }
+                });
             });
             $.ajax({
 				data:{api_token: API_TOKEN},
@@ -157,7 +229,9 @@
                         $(".text-danger em").html(data.totalPay);
                         $(".text-success em").html(data.totalIn);
                         $(".text-primary em").html(data.balance);
-                    }
+                    } else {
+						window.location.href = "login.html";
+					}
                 }
             });
 		});
