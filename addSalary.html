@@ -139,7 +139,7 @@
         txtSpeech.attr('placeholder', '开始语音输入...').val('');
         plus.speech.startRecognize( options, function ( s ) {
             txtSpeech.val(s);
-            $('#txtUsername').trigger("click");
+            txtSpeech.trigger("click");
         }, function ( e ) {
             outSet( "语音识别失败："+e.message );
         } );

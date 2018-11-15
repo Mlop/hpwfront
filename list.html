@@ -11,8 +11,11 @@
 		<meta name="MobileOptimized" content="320" />
 		<title>哗!收账</title>
 		<link rel="stylesheet" href="css/default.min.css" />
-		<link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css" />
+		<!--<link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css" />-->
+		<link rel="stylesheet" href="js/bootstrap/css/font.min.css" />
+		<link rel="stylesheet" href="js/bootstrap4.1.3/css/bootstrap.min.css" />
 		<link rel="stylesheet" href="css/global.css" />
+		<link rel="stylesheet" href="css/dropload.css" />
 		<style>
 			.container-fluid {
 				margin: 0px;
@@ -159,6 +162,52 @@
 			.first-name.green{
 				background-color: green;
 			}
+
+			.content{
+				max-width: 640px;
+				margin: 0 auto;
+				background-color: #fff;
+			}
+			.content .item{
+				display: -webkit-box;
+				display: -webkit-flex;
+				display: -ms-flexbox;
+				display: flex;
+				-ms-flex-align:center;
+				-webkit-box-align:center;
+				box-align:center;
+				-webkit-align-items:center;
+				align-items:center;
+				padding:3.125%;
+				border-bottom: 1px solid #ddd;
+				color: #333;
+				text-decoration: none;
+			}
+			.content .item img{
+				display: block;
+				width: 40px;
+				height: 40px;
+				border:1px solid #ddd;
+			}
+			.content .item h3{
+				display: block;
+				-webkit-box-flex: 1;
+				-webkit-flex: 1;
+				-ms-flex: 1;
+				flex: 1;
+				width: 100%;
+				max-height: 40px;
+				overflow: hidden;
+				line-height: 20px;
+				margin: 0 10px;
+				font-size: 1.2rem;
+			}
+			.content .item .date{
+				display: block;
+				height: 20px;
+				line-height: 20px;
+				color: #999;
+			}
 		</style>
 	</head>
 
@@ -167,10 +216,26 @@
 			<span class="left" style="visibility: hidden;"><a href="#"><i class="glyphicon glyphicon-menu-left"></i>返回</a></span>
 			<span class="text">记账</span>
 		</div>
-		<div class="container-fluid">
-			<div class="search-form">
-				<input id="txtSearchKey" type="text" class="form-control" placeholder="输入要查找的名字" />
+		<div class="form-inline" style="margin-top: 2px;">
+			<!--<div class="col-auto">-->
+				<!--<label class="sr-only" for="inlineFormInputGroup">Username</label>-->
+				<!--<div class="input-group mb-2">-->
+					<!--<div class="input-group-prepend">-->
+						<!--<div class="input-group-text">@</div>-->
+					<!--</div>-->
+					<!--<input type="text" class="form-control" id="inlineFormInputGroup" placeholder="Username">-->
+
+				<!--</div>-->
+
+			<div class="form-group mb-2">
+				<button type="button" class="btn" id="btnSpeech">语音</button>
 			</div>
+			<div class="form-group mb-2" style="width: 65%;">
+				<input type="text" class="form-control" id="txtSearchKey" placeholder="请输入姓名或首字母查询">
+			</div>
+			<button type="button" class="btn btn-primary mb-2" id="btnSearch">搜索</button>
+		</div>
+		<div class="container-fluid">
 			<div class="list-form">
 				<ul>
 				</ul>
@@ -196,12 +261,7 @@
 			<span class="user-detail"><span><i class="glyphicon glyphicon-user"></i><em>{ username }</em></span>
 			<span><i class="glyphicon glyphicon-earphone"></i><em>{ iphone }</em></span></span>
 			<span class="user-bill" str='{str}'>
-				<span class="bill-total"><em><sub class="glyphicon glyphicon-yen"></sub>{ bill.total }</em></span>
-				<span class="bill-item">
-					<em class="up"><sub class="glyphicon glyphicon-arrow-up"></sub>{ bill.owe }</em>
-					<em class="down"><sub class="glyphicon glyphicon-arrow-down"></sub>{ bill.income }</em>
-				</span>
-
+				<span class="bill-total" style="line-height: 56px"><em><sub class="glyphicon glyphicon-yen"></sub>{ total }</em></span>
 			</span>
 <span class="menu-right"><i class="glyphicon glyphicon-menu-right"></i></span>
 		</div>
@@ -214,6 +274,8 @@
 	<script src="js/lib/k-utils-plug.js"></script>
 	<script src="js/global.js"></script>
 	<script src="js/function.js"></script>
+	<script src="help/js/common.js"></script>
+	<script src="js/dropload.js"></script>
 	<script src="js/list.js"></script>
 
 </html>
