@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="misapplication-tap-highlight" content="no" />
+    <meta name="HandheldFriendly" content="true" />
+    <meta name="MobileOptimized" content="320" />
+    <title>记账</title>
+    <link rel="stylesheet" href="css/default.min.css" />
+    <link rel="stylesheet" href="js/bootstrap/css/font.min.css" />
+    <link rel="stylesheet" href="js/bootstrap4.1.3/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/dropload.css" />
+    <!--<link rel="stylesheet" href="css/global.css" />-->
+    <style>
+        .nav-pills .nav-link.active, .nav-pills .show>.nav-link {
+            color: #fff;
+            background-color: #9aafe5;
+        }
+        .content{
+            max-width: 640px;
+            margin: 0 auto;
+            background-color: #fff;
+        }
+        .content .item{
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-align:center;
+            -webkit-box-align:center;
+            box-align:center;
+            -webkit-align-items:center;
+            align-items:center;
+            padding:3.125%;
+            border-bottom: 1px solid #ddd;
+            color: #333;
+            text-decoration: none;
+        }
+        .content .item img{
+            display: block;
+            width: 40px;
+            height: 40px;
+            border:1px solid #ddd;
+        }
+        .content .item h3{
+            display: block;
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+            width: 100%;
+            max-height: 40px;
+            overflow: hidden;
+            line-height: 20px;
+            margin: 0 10px;
+            font-size: 1.2rem;
+        }
+        .content .item .date{
+            display: block;
+            height: 20px;
+            line-height: 20px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="k-nav">
+        <span class="left"><a href="index.html"><i class="glyphicon glyphicon-menu-left"></i>返回</a></span>
+        <span class="text">记账</span>
+    </div>
+    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        <li class="nav-item">
+            <a class="nav-link active" id="pills-home-tab" data-toggle="pill" href="#pills-home" role="tab" aria-controls="pills-home" aria-selected="true">拨款详情</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="pills-profile-tab" data-toggle="pill" href="#pills-profile" role="tab" aria-controls="pills-profile" aria-selected="false">工资发放详情</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" id="pills-contact-tab" data-toggle="pill" href="#pills-contact" role="tab" aria-controls="pills-contact" aria-selected="false">Contact</a>
+        </li>
+    </ul>
+    <div class="tab-content" id="pills-tabContent">
+        <div class="tab-pane fade show active" id="pills-home" role="tabpanel" aria-labelledby="pills-home-tab">
+            <div class="content" id="fundList">
+                <div class="lists"></div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
+            <div class="content" id="payList">
+                <div class="lists"></div>
+            </div>
+        </div>
+        <div class="tab-pane fade" id="pills-contact" role="tabpanel" aria-labelledby="pills-contact-tab">c</div>
+    </div>
+    <script src="js/jQuery/jquery-1.11.2.min.js"></script>
+    <script src="js/bootstrap4.1.3/js/bootstrap.min.js"></script>
+    <script src="js/dropload.js"></script>
+    <!--<script src="js/fastclick/fastclick.js"></script>-->
+    <!--<script src="js/appDefined.js"></script>-->
+    <!--<script src="js/global.js"></script>-->
+    <script src="js/function.js"></script>
+    <script>
+        $(function () {
+            loadFundMore();
+            loadPayMore()
+        });
+        function loadFundMore() {
+            var page = 0, size = 5;
+            $('#fundList').dropload({
+                scrollArea : window,
+                loadDownFn : function(me){
+                    // 拼接HTML
+                    var result = '';
+                    $.ajax({
+                        type: 'GET',
+                        url: apiUrl + 'report/user/fundlist',
+                        data: {api_token: API_TOKEN, page: page, size: size},
+                        success: function(res){
+                            if (res && res.code && res.data.length > 0) {
+                                var data = res.data;
+                                var arrLen = data.length;
+                                for (var i = 0; i < arrLen; i++) {
+                                    result += '<div class="item opacity">'
+                                        + '<h3>' + data[i].cash + '￥</h3>'
+                                        + '<span class="date">' + data[i].created_at + '</span>'
+                                        + '</div>';
+                                }
+                                // 插入数据到页面，放到最后面
+                                $('#fundList .lists').append(result);
+                                // 每次数据插入，必须重置
+                                me.resetload();
+                            } else {
+                                // 锁定
+                                me.lock();
+                                // 无数据
+                                me.noData();
+                                me.resetload();
+                            }
+                        },
+                        error: function(xhr, type){
+                            // 即使加载出错，也得重置
+                            // me.resetload();
+                        }
+                    });
+                    page++;
+                }
+            });
+        }
+        function loadPayMore() {
+            var page = 0, size = 5;
+            $('#payList').dropload({
+                scrollArea : window,
+                loadDownFn : function(me){
+                    // 拼接HTML
+                    var result = '';
+                    $.ajax({
+                        type: 'GET',
+                        url: apiUrl + 'report/user/paylist',
+                        data: {api_token: API_TOKEN, page: page, size: size},
+                        success: function(res){
+                            if (res && res.code && res.data.length > 0) {
+                                var data = res.data;
+                                var arrLen = data.length;
+                                for (var i = 0; i < arrLen; i++) {
+                                    result += '<div class="item opacity">' + data[i].name
+                                        + '<h3>' + data[i].cash + '￥</h3>'
+                                        + '<span class="date">' + data[i].created_at + '</span>'
+                                        + '</div>';
+                                }
+                                // 插入数据到页面，放到最后面
+                                $('#payList .lists').append(result);
+                                // 每次数据插入，必须重置
+                                me.resetload();
+                            } else {
+                                // 锁定
+                                me.lock();
+                                // 无数据
+                                me.noData();
+                                me.resetload();
+                            }
+                        },
+                        error: function(xhr, type){
+                            // 即使加载出错，也得重置
+                            // me.resetload();
+                        }
+                    });
+                    page++;
+                }
+            });
+        }
+    </script>
+</body>
+</html>

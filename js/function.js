@@ -1,6 +1,6 @@
 //定义全局变量
-var apiUrl = "http://jz.api.com/";
-// var apiUrl = "http://119.27.163.89:8081/";
+// var apiUrl = "http://jz.api.com/";
+var apiUrl = "http://119.27.163.89:8081/";
 var API_TOKEN = localStorage.getItem('api_token');
 var CLIENTSTATUS = {
     login: false,

@@ -195,14 +195,15 @@
 			<span class="user-poto">{strHtml}</span>
 			<span class="user-detail"><span><i class="glyphicon glyphicon-user"></i><em>{ username }</em></span>
 			<span><i class="glyphicon glyphicon-earphone"></i><em>{ iphone }</em></span></span>
-			<span class="user-bill">
+			<span class="user-bill" str='{str}'>
 				<span class="bill-total"><em><sub class="glyphicon glyphicon-yen"></sub>{ bill.total }</em></span>
-			<span class="bill-item">
+				<span class="bill-item">
 					<em class="up"><sub class="glyphicon glyphicon-arrow-up"></sub>{ bill.owe }</em>
 					<em class="down"><sub class="glyphicon glyphicon-arrow-down"></sub>{ bill.income }</em>
 				</span>
+
 			</span>
-			<span class="menu-right"><i class="glyphicon glyphicon-menu-right"></i></span>
+<span class="menu-right"><i class="glyphicon glyphicon-menu-right"></i></span>
 		</div>
 	</script>
 
@@ -214,50 +215,5 @@
 	<script src="js/global.js"></script>
 	<script src="js/function.js"></script>
 	<script src="js/list.js"></script>
-	<script>
-		// $(function() {
-		//
-		// 	$('.container-fluid').css({
-		// 		'height': window.screen.height - 96 + 'px'
-		// 	});
-		// 	var data = getUserList(),
-		// 		tpl = new Template($('#tpl').html()),
-		// 		htmls = [];
-		// 	for (var i = 0, l = data.length; i < l; i++) {
-		// 		htmls.push('<li>' + tpl.render(data[i]) + '</li>');
-		// 	}
-		// 	$('.list-form ul').empty().html(htmls.join(''));
-		//
-		// 	$('.glyphicon-earphone ~ em').on('click',function(e){
-		// 		var tar = $(e.target),phone=tar.html();
-		// 		APP.showActionSheet(phone);
-		// 	});
-		// });
-		//
-		// function getUserList() {
-		// 	var r = [],
-		// 		k = window.K,
-		// 		owe = 0,
-		// 		income = 0;
-		// 	var headimgs = ['fbb.jpg', 'fsf.jpg', 'gy.jpg', 'hxm.jpg', 'jy.jpg', 'lyx.jpg', 'sc.jpg'];
-		// 	for (var i = 0, l = 50; i < l; i++) {
-		// 		owe = K.getRandom(0, 50000);
-		// 		income = K.getRandom(0, 50000);
-		// 		r.push({
-		// 			url: 'img/headimg/' + headimgs[K.getRandomByM(0, 6)],
-		// 			username: K.getUserName(),
-		// 			iphone: K.getRandomPhone('###-####-####'),
-		// 			bill: {
-		// 				total: owe + income,
-		// 				owe: owe,
-		// 				income: income
-		// 			}
-		// 		});
-		// 	}
-		// 	return r;
-		//
-		//
-		// }
-	</script>
 
 </html>

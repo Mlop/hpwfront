@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="misapplication-tap-highlight" content="no" />
+    <meta name="HandheldFriendly" content="true" />
+    <meta name="MobileOptimized" content="320" />
+    <title>记账</title>
+    <link rel="stylesheet" href="css/default.min.css" />
+    <!--<link rel="stylesheet" href="js/bootstrap/css/bootstrap.min.css" />-->
+    <link rel="stylesheet" href="js/bootstrap/css/font.min.css" />
+    <!--<link rel="stylesheet" href="js/bootstrap4.1.3/css/bootstrap-grid.min.css" />-->
+    <link rel="stylesheet" href="js/bootstrap4.1.3/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="css/dropload.css" />
+
+    <!--<link rel="stylesheet" href="css/global.css" />-->
+    <style>
+        .content{
+            max-width: 640px;
+            margin: 0 auto;
+            background-color: #fff;
+        }
+        .content .item{
+            display: -webkit-box;
+            display: -webkit-flex;
+            display: -ms-flexbox;
+            display: flex;
+            -ms-flex-align:center;
+            -webkit-box-align:center;
+            box-align:center;
+            -webkit-align-items:center;
+            align-items:center;
+            padding:3.125%;
+            border-bottom: 1px solid #ddd;
+            color: #333;
+            text-decoration: none;
+        }
+        .content .item img{
+            display: block;
+            width: 40px;
+            height: 40px;
+            border:1px solid #ddd;
+        }
+        .content .item h3{
+            display: block;
+            -webkit-box-flex: 1;
+            -webkit-flex: 1;
+            -ms-flex: 1;
+            flex: 1;
+            width: 100%;
+            max-height: 40px;
+            overflow: hidden;
+            line-height: 20px;
+            margin: 0 10px;
+            font-size: 1.2rem;
+        }
+        .content .item .date{
+            display: block;
+            height: 20px;
+            line-height: 20px;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="k-nav">
+        <span class="left"><a href="list.html"><i class="glyphicon glyphicon-menu-left"></i></a></span>
+        <span class="text">记账</span>
+    </div>
+    <div class="accordion" id="accordionDetail">
+        <div class="card">
+            <div class="card-header" id="headingDetail">
+                <h5 class="mb-0" data-toggle="collapse" data-target="#collapseDetail">
+                    <!--<button class="btn btn-link" type="button" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">-->
+                        <span id="spHeader"></span>
+                    <span style="float:right;" class="glyphicon glyphicon-chevron-down"></span>
+                    <!--</button>-->
+                </h5>
+            </div>
+            <div id="collapseDetail" class="collapse" aria-labelledby="headingDetail" data-parent="#accordionDetail">
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="alert alert-primary" >
+        工资详情
+    </div>
+    <div class="content">
+        <div class="lists"></div>
+    </div>
+
+    <!-- fee Modal -->
+    <div class="modal fade" id="feeModal" tabindex="-1" role="dialog" aria-labelledby="feeModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="feeModalLabel">付工资</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="input-group mb-2">
+                        <input type="text" class="form-control" id="txtMeals" placeholder="请输入需要支付的工资">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">￥</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" id="btnSaveFee">保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+<script src="js/jQuery/jquery-1.11.2.min.js"></script>
+<!--<script src="js/bootstrap4.1.3/js/popper.min.js"></script>-->
+<script src="js/bootstrap4.1.3/js/bootstrap.min.js"></script>
+<script src="js/dropload.js"></script>
+<!--<script src="js/fastclick/fastclick.js"></script>-->
+<!--<script src="js/lib/k-utils-fn.js"></script>-->
+<!--<script src="js/lib/k-utils-plug.js"></script>-->
+<script src="js/appDefined.js"></script>
+<!--<script src="js/global.js"></script>-->
+<script src="js/function.js"></script>
+<script>
+    // 页数
+    var page = 0;
+    // 每页展示5个
+    var size = 5;
+    $(function () {
+        var str = localStorage.getItem('worker_str');
+        var worker = JSON.parse(str);
+        $("#spHeader").html(worker.name + '<i class="glyphicon glyphicon-earphone"></i><em>' + worker.phone + '</em>');
+
+        initWorker(worker);
+
+        $('.glyphicon-earphone ~ em').on('click',function(e){
+            var tar = $(e.target),phone=tar.html();
+            APP.showActionSheet(phone);
+        });
+        //加载更多
+        loadMore(worker.id);
+
+        $('#feeModal').on('shown.bs.modal', function () {
+            $('#txtMeals').trigger('focus')
+        });
+        $("#btnSaveFee").click(function () {
+            $.ajax({
+                type: "post",
+                data:{api_token: API_TOKEN, cash: $("#txtMeals").val(), worker_id: worker.id, type: 'paid'},
+                url: apiUrl + "user/salary",
+                success: function(result) {
+                    console.log(result);
+                    if (result.code) {
+                        // $('#feeModal').modal('hide');
+                        window.location.reload();
+                        //餐费
+                        // $("#spMeals").text(result.data.value);
+                    }
+                }
+            });
+        });
+    });
+    function initWorker(data) {
+        // var unpaid = data.total - data.totalpaid;
+        var html = '<li class="list-group-item">基本工资：' + data.salary + '￥/天</li>';
+        $.ajax({
+            url: apiUrl + "report/worker/contact/" + data.id,
+            data: {api_token: API_TOKEN},
+            success: function (res) {
+                if (res && res.data) {
+                    var tData = res.data, unpaid = 0;
+                    for (var i = 0; i < tData.length; i++) {
+                        unpaid += parseFloat(tData[i]["total"]);
+                        switch (tData[i]["type"]) {
+                            case "salary":
+                                html += '<li class="list-group-item">已有工资：' + tData[i]["total"] + '￥</li>';
+                                break;
+                            case "meals":
+                                html += '<li class="list-group-item">饭费共：' + (-1)*tData[i]["total"] + '￥</li>';
+                                break;
+                            case "advance":
+                                html += '<li class="list-group-item">已借资：' + tData[i]["total"] + '￥</li>';
+                                break;
+                            case "paid":
+                                html += '<li class="list-group-item text-success">已付：' + (-1)*tData[i]["total"] + '￥</li>';
+                                // paid = (-1)*tData[i]["total"];
+                                break;
+                        }
+                    }
+                }
+                // var unpaid = data.total - paid;
+                html += '<li class="list-group-item"><h5 class="card-title text-danger">未付：' + unpaid
+                    + '￥<em style="float: right;" data-toggle="modal" data-target="#feeModal">去付工资'
+                    + '<i class="glyphicon glyphicon-hand-right"></i></em></h5><p class="card-text">未付=已有-饭费-已付</p></li>'
+
+                $(".list-group").html(html);
+            }
+        });
+    }
+    function loadMore(id) {
+        $('.content').dropload({
+            scrollArea : window,
+            loadDownFn : function(me){
+                // 拼接HTML
+                var result = '';
+                var typeArr = {"salary": "工资", "meals": "饭费", "advance": "借资", "paid": "已付"};
+                $.ajax({
+                    type: 'GET',
+                    url: apiUrl + 'worker/salarylist/' + id,
+                    data: {api_token: API_TOKEN, page: page, size: size},
+                    success: function(res){
+                        if (res && res.code && res.data.length > 0) {
+                            var data = res.data;
+                            var arrLen = data.length;
+                            for (var i = 0; i < arrLen; i++) {
+                                result += '<div class="item opacity">' + typeArr[data[i].type]
+                                    + '<h3>' + data[i].cash + '￥</h3>'
+                                    + '<span class="date">' + data[i].record_at + '</span>'
+                                    + '</div>';
+                            }
+                            // 插入数据到页面，放到最后面
+                            $('.lists').append(result);
+                            // 每次数据插入，必须重置
+                            me.resetload();
+                        } else {
+                            // 锁定
+                            me.lock();
+                            // 无数据
+                            me.noData();
+                            me.resetload();
+                        }
+                    },
+                    error: function(xhr, type){
+                        // 即使加载出错，也得重置
+                        // me.resetload();
+                    }
+                });
+                page++;
+            }
+        });
+    }
+</script>
+</html>

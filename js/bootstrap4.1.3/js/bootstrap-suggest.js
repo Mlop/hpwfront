@@ -465,6 +465,7 @@
             type: 'GET',
             dataType: options.jsonp ? 'jsonp' : 'json',
             timeout: 5000,
+            // data: options.ajaxData ? options.ajaxData : {},
         };
 
         // jsonp
@@ -493,12 +494,12 @@
                 return ajaxParam.url || options.url;
             }
 
-            var type = '?';
+            var type = '?k=';
             // var type = '/';
             if (/=$/.test(options.url)) {
                 type = '';
             } else if (/\?/.test(options.url)) {
-                type = '&';
+                type = '&k=';
             }
 
             return options.url + type + encodeURIComponent(keyword);
